@@ -86,7 +86,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.
 
 Route::get('/komunitas', [CommunityController::class, 'index'])->name('komunitas');
 Route::get('/komunitas/create', [CommunityController::class, 'create'])->name('komunitas.create');
-Route::post('/komunitas/draft', [CommunityController::class, 'saveDraft'])->name('komunitas.draft');
+Route::get('/komunitas/diskusi', [CommunityController::class, 'diskusi'])
+    ->name('komunitas.diskusi');
 Route::get('/statistik', [StatisticsController::class, 'index'])->name('statistik');
 Route::redirect('/statistic', '/statistik');
 Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
