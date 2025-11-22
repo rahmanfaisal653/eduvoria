@@ -1,4 +1,4 @@
-<?php
+
 
 namespace App\Http\Controllers;
 
@@ -65,45 +65,6 @@ class AdminController extends Controller
         ];
 
         return view('admin.dashboard', compact('tasks', 'logs'));
-    }
-
-    public function usersIndex()
-    {
-        // Data Pengguna (Simulasi)
-        $users = [
-            [
-                'id' => 'user-001', 
-                'name' => 'Rifky Pratama', 
-                'email' => 'rifky@email.com', 
-                'status' => 'Aktif', 
-                'joined' => 'Jun 2021', 
-                'status_color' => 'bg-green-100 text-green-800',
-                // Kunci 'actions' ditambahkan di sini
-                'actions' => ['Edit', 'Blokir'] 
-            ],
-            [
-                'id' => 'user-002', 
-                'name' => 'Dewi Lestari', 
-                'email' => 'dewi@email.com', 
-                'status' => 'Menunggu Verifikasi', 
-                'joined' => 'Okt 2025', 
-                'status_color' => 'bg-yellow-100 text-yellow-800',
-                // Kunci 'actions' ditambahkan di sini
-                'actions' => ['Edit', 'Blokir'] 
-            ],
-            [
-                'id' => 'user-003', 
-                'name' => 'Joko Susanto', 
-                'email' => 'joko@email.com', 
-                'status' => 'Diblokir', 
-                'joined' => 'Jan 2020', 
-                'status_color' => 'bg-red-100 text-red-800',
-                // Kunci 'actions' ditambahkan di sini
-                'actions' => ['Edit', 'Blokir'] 
-            ],
-        ];
-        
-        return view('admin.users', compact('users')); 
     }
 
     public function contentIndex()

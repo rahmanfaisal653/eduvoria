@@ -43,27 +43,67 @@
                 <tbody class="divide-y divide-gray-200">
                     {{-- Loop data $reports dari Controller --}}
                     @forelse ($reports as $report)
-                    <tr class="hover:bg-gray-50" data-report-id="{{ $report['id'] }}">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $report['id'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['type'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['target'] }}</td>
+                    <tr class="hover:bg-gray-50">
+                        
+                        {{-- 1. ID LAPORAN --}}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            #{{ $report->id }}
+                        </td>
+
+                        {{-- 2. TIPE PELANGGARAN --}}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $report->type }}
+                        </td>
+
+                        {{-- 3. TARGET (Kita ambil dari content_summary) --}}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ Str::limit($report->content_summary, 30) }}
+                            <div class="text-xs text-gray-400 mt-1">Oleh: {{ $report->reported_by }}</div>
+                        </td>
+
+                        {{-- 4. PRIORITAS (Logika Warna Manual) --}}
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $report['priority_color'] }}">
-                                {{ $report['priority'] }}
+                            @php
+                                // Tentukan warna berdasarkan priority (High/Medium/Low)
+                                $pColor = 'bg-gray-100 text-gray-800'; // Default (Low)
+                                
+                                if($report->priority == 'High') {
+                                    $pColor = 'bg-red-100 text-red-800';
+                                } elseif($report->priority == 'Medium') {
+                                    $pColor = 'bg-yellow-100 text-yellow-800';
+                                }
+                            @endphp
+
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $pColor }}">
+                                {{ ucfirst($report->priority) }}
                             </span>
                         </td>
+
+                        {{-- 5. AKSI REVIEW --}}
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                            <button
-                                    class="action-btn-trigger text-red-600 hover:text-red-900" 
-                                    data-action="Review"
-                                >
-                                    Review
-                                </button>
+                            {{-- TOMBOL EDIT --}}
+                            <button type="button"
+                                    class="edit-report-btn text-blue-600 hover:text-blue-900 font-semibold"
+                                    data-id="{{ $report->id }}"
+                                    data-type="{{ $report->type }}"
+                                    data-priority="{{ $report->priority }}"
+                                    data-description="{{ $report->description }}">
+                                Edit
+                            </button>
+
+                            {{-- 3. TOMBOL HAPUS LANGSUNG (Kode Kamu) --}}
+                            <a href="{{ route('admin.reports.delete', $report->id) }}" 
+                            onclick="return confirm('Yakin hapus laporan ini?')"
+                            class="text-red-600 hover:text-red-900 cursor-pointer">
+                            Hapus
+                            </a>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada laporan aktif.</td>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                            Tidak ada laporan aktif saat ini.
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -72,111 +112,7 @@
     </section>
 
     {{-- MODAL AKSI PELANGGARAN (Review/Tindak) akan diletakkan di sini --}}
-    @include('componentsAdmin.review-reports-modal')
+    @include('componentsAdmin.edit-reports-modal')
 
 @endsection
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        // --- ELEMEN MODAL ---
-        const reviewModal = document.getElementById('review-modal');
-        const reviewPostId = document.getElementById('review-post-id');
-        const modalHeaderTitle = document.getElementById('modal-header-title');
-        const reviewPostSummary = document.getElementById('review-post-summary');
-        const reviewReportList = document.getElementById('review-report-list');
-        const adminReviewNotes = document.getElementById('admin-review-notes');
-
-        const closeReviewModalBtn = document.getElementById('close-review-modal');
-        const actionDeleteBtn = document.getElementById('action-delete');
-        const actionApproveBtn = document.getElementById('action-approve');
-        
-        // --- FUNGSI UTILITY ---
-        function closeModal() { reviewModal.classList.add('hidden'); adminReviewNotes.value = ''; }
-        
-        // --- HANDLER MODAL UTAMA ---
-        function openReviewModal(reportData, action) {
-            
-            // 1. Atur Header Modal berdasarkan Aksi
-            modalHeaderTitle.textContent = action === 'Tindak' ? `TINDAK LANJUT PELANGGARAN ${reportData.id}` : `Tinjauan Pelanggaran Postingan ${reportData.id}`;
-            modalHeaderTitle.classList.toggle('text-red-600', action === 'Tindak');
-            modalHeaderTitle.classList.toggle('text-orange-500', action === 'Review');
-
-            // 2. Isi Detail Laporan
-            reviewPostId.textContent = reportData.id;
-            
-            // Konten Ringkasan (Menggunakan content_summary dari data-attribute)
-            reviewPostSummary.textContent = reportData.summary; 
-            
-            // 3. Reset dan Isi Daftar Laporan (Simulasi)
-            reviewReportList.innerHTML = '';
-            const reportListItem = document.createElement('li');
-            
-            // Menggunakan fallback untuk mencegah "undefined"
-            const type = reportData.type || 'N/A';
-            const priority = reportData.priority || 'N/A';
-            
-            reportListItem.textContent = `Pelanggaran: ${type} (${priority} Prioritas)`;
-            reportListItem.className = 'text-red-600';
-            reviewReportList.appendChild(reportListItem);
-            
-            // 4. Tampilkan modal
-            reviewModal.classList.remove('hidden');
-        }
-
-
-        // --- LOGIKA EVENT LISTENERS ---
-        
-        // A. Pemicu dari Tombol Tabel
-        document.querySelectorAll('.action-btn-trigger').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const reportId = this.getAttribute('data-id');
-                const action = this.getAttribute('data-action');
-                
-                // Ambil data dari TR (closest row)
-                const row = this.closest('tr');
-                const reportData = {
-                    // Menggunakan operator OR (||) untuk memberikan nilai default jika dataset gagal
-                    id: row.dataset.reportId || reportId,
-                    type: row.dataset.reportType || 'Tipe Tidak Ditemukan',
-                    target: row.dataset.reportTarget || 'Target Tidak Ditemukan',
-                    priority: row.dataset.reportPriority || 'N/A',
-                    summary: row.dataset.contentSummary || 'Ringkasan konten tidak tersedia.',
-                };
-                
-                openReviewModal(reportData, action);
-            });
-        });
-        
-        // B. Aksi di Dalam Modal (Hapus Konten)
-        actionDeleteBtn.addEventListener('click', function() {
-            const reportId = reviewPostId.textContent;
-            const notes = adminReviewNotes.value;
-            const confirmation = confirm(`Yakin hapus konten untuk laporan ${reportId}?`);
-            if (confirmation) {
-                alert(`[SIMULASI] Laporan ${reportId} ditindak: Konten Dihapus. Catatan: ${notes}`);
-                closeModal();
-            }
-        });
-        
-        // C. Aksi di Dalam Modal (Setujui)
-        actionApproveBtn.addEventListener('click', function() {
-            const reportId = reviewPostId.textContent;
-            const notes = adminReviewNotes.value;
-            alert(`[SIMULASI] Laporan ${reportId} disetujui (Tidak Melanggar). Catatan: ${notes}`);
-            closeModal();
-        });
-
-        // D. Penutupan Modal
-        closeReviewModalBtn.addEventListener('click', closeModal);
-        reviewModal.addEventListener('click', function(event) {
-            if (event.target === reviewModal) {
-                closeModal();
-            }
-        });
-    });
-</script>
-@endpush

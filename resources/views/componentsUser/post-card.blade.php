@@ -15,21 +15,27 @@
         
         {{-- Dropdown Laporkan Postingan --}}
         <div class="relative">
-            <button 
-                class="report-toggle-btn text-gray-400 hover:text-gray-700 p-1 rounded-full transition" 
-                data-target="menu-{{ $post->id }}"
-                data-post-id="{{ $post->id }}"
-            >
+            {{-- TOMBOL TITIK TIGA --}}
+            {{-- Kita panggil fungsi JS langsung di sini --}}
+            <button type="button"
+                    onclick="toggleMenu('menu-{{ $post->id }}')"
+                    class="text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition focus:outline-none">
                 ⋮
             </button>
             
-            <div 
-                id="menu-{{ $post->id }}" 
-                class="report-menu-content absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden z-10"
-            >
-                <a href="#report-{{ $post->id }}" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50" role="menuitem">
-                    ⚠️ Laporkan Postingan
-                </a>
+            {{-- MENU DROPDOWN --}}
+            {{-- Tambahkan z-50 agar muncul di atas elemen lain --}}
+            <div id="menu-{{ $post->id }}" 
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50"
+                style="display: none;"> {{-- Double protection hidden --}}
+                
+                <div class="py-1">
+                    <a href="#" 
+                    onclick="event.preventDefault(); openUserReportModal('{{ $post->id }}', '{{ Str::limit($post->content, 30) }}'); toggleMenu('menu-{{ $post->id }}');"
+                    class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left">
+                        ⚠️ Laporkan
+                    </a>
+                </div>
             </div>
         </div>
         
@@ -61,3 +67,44 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    // Fungsi untuk Buka/Tutup Menu
+    function toggleMenu(menuId) {
+        // 1. Ambil elemen menu berdasarkan ID
+        var menu = document.getElementById(menuId);
+        
+        // 2. Cek apakah sedang sembunyi atau tidak
+        if (menu.style.display === "none" || menu.classList.contains('hidden')) {
+            // TAMPILKAN
+            // Tutup menu lain dulu biar gak numpuk
+            closeAllMenus(); 
+            menu.style.display = "block";
+            menu.classList.remove('hidden');
+        } else {
+            // SEMBUNYIKAN
+            menu.style.display = "none";
+            menu.classList.add('hidden');
+        }
+    }
+
+    // Fungsi bantu untuk menutup semua menu yang terbuka
+    function closeAllMenus() {
+        var dropdowns = document.querySelectorAll('[id^="menu-"]'); // Cari semua ID yang diawali "menu-"
+        dropdowns.forEach(function(d) {
+            d.style.display = "none";
+            d.classList.add('hidden');
+        });
+    }
+
+    // Tutup menu kalau klik di sembarang tempat
+    window.onclick = function(event) {
+        // Jika yang diklik BUKAN tombol titik tiga
+        if (!event.target.matches('.text-gray-400') && !event.target.matches('button')) {
+            closeAllMenus();
+        }
+    }
+</script>
+@endpush
+

@@ -63,8 +63,8 @@
 
     {{-- Subscribe + Profil --}}
     <div class="flex items-center space-x-4">
-      <button id="subscribe-button"
-        class="bg-cyan-500 text-white py-1.5 px-3 rounded-full text-sm font-semibold hover:bg-cyan-600 transition shadow-md">
+      <button id="open-subscribe-modal"
+        class="bg-cyan-500 text-white py-1.5 px-3 rounded-full text-sm font-semibold hover:bg-cyan-600 transition shadow-md relative z-50">
         Subscribe
       </button>
 
@@ -218,21 +218,11 @@
         </div>
     </div>
 
-    <!-- SCRIPT UTAMA (Dropdown Header & Modal Control) -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Elemen Dropdown Profil
             const profileButton = document.getElementById('profile-menu-button');
             const profileMenu = document.getElementById('profile-menu');
-            // Elemen Modal Subscribe
-            const subscribeButton = document.getElementById('subscribe-button');
-            const subscribeModal = document.getElementById('subscribe-modal');
-            const closeModalButton = document.getElementById('close-modal-button');
-            // Elemen Modal Report
-            const reportModal = document.getElementById('report-modal');
-            const reportForm = document.getElementById('report-form');
-            const cancelButton = document.getElementById('cancel-report-button');
-            const reportedPostIdInput = document.getElementById('reported-post-id');
 
             // FUNGSI 1: KONTROL DROPDOWN PROFIL
             profileButton.addEventListener('click', function() {
@@ -248,45 +238,56 @@
                     }
                 }
             });
-
-            // FUNGSI 2: KONTROL MODAL SUBSCRIBE
-            function openSubscribeModal() { subscribeModal.classList.remove('hidden'); }
-            function closeSubscribeModal() { subscribeModal.classList.add('hidden'); }
-            subscribeButton.addEventListener('click', openSubscribeModal);
-            closeModalButton.addEventListener('click', closeSubscribeModal);
-            subscribeModal.addEventListener('click', function(event) {
-                if (event.target === subscribeModal) { closeSubscribeModal(); }
-            });
-
-            // FUNGSI 3: KONTROL MODAL REPORT (Simulasi)
-            function closeReportModal() { reportModal.classList.add('hidden'); reportForm.reset(); }
-            
-            // Logika Submit Form Report (Simulasi)
-            reportForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const violationType = document.getElementById('pelanggaran-type').value;
-                const postId = reportedPostIdInput.value;
-                console.log(`Laporan dikirim: Postingan ID ${postId}, Pelanggaran: ${violationType}`);
-                alert('Laporan Anda telah berhasil dikirim. Terima kasih!');
-                closeReportModal();
-            });
-            cancelButton.addEventListener('click', function(event) {
-                event.preventDefault(); 
-                closeReportModal();
-            });
-            reportModal.addEventListener('click', function(event) {
-                if (event.target === reportModal) { closeReportModal(); }
-            });
-            
-            // Logika memicu modal report dari postingan (Jika ada di halaman yang di-extend)
-            document.querySelectorAll('.report-menu-content a').forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    // Ini akan ditangani oleh skrip di halaman konten untuk membuka modal
-                });
-            });
         });
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        // Tombol pemicu di layout utama (Hanya perlu dicari sekali)
+        const openModalTrigger = document.getElementById('open-subscribe-modal'); 
+
+        // Fungsi Buka Modal (Mencari elemen modal secara real-time untuk menghindari error 'null')
+        const openModal = () => {
+            const modal = document.getElementById('subscribe-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        };
+        
+        // Fungsi Tutup Modal (Mencari elemen modal secara real-time)
+        const closeModal = () => {
+            const modal = document.getElementById('subscribe-modal');
+            if (modal) modal.classList.add('hidden');
+        };
+
+        // --- Event Listeners ---
+        
+        // A. Pemicu Buka Modal (Tombol 'Subscribe' di Layout)
+        if (openModalTrigger) {
+            openModalTrigger.addEventListener('click', openModal);
+        }
+
+        // B. Tombol "Lain kali" (Close Button)
+        const closeModalButton = document.getElementById('close-modal-button');
+        if (closeModalButton) {
+            closeModalButton.addEventListener('click', closeModal);
+        }
+
+        // C. Klik di Luar Modal (Overlay Close)
+        // Listener dipasang di body untuk menangkap klik di luar kotak modal
+        document.body.addEventListener('click', function (e) {
+            const modal = document.getElementById('subscribe-modal');
+            
+            // Cek apakah klik terjadi di luar div putih modal dan di atas div utama (#subscribe-modal)
+            if (modal && e.target === modal) {
+                closeModal();
+            }
+        });
+    });
+    </script>
+
+    
     <!-- Memungkinkan halaman lain menambahkan script tambahan -->
     @stack('scripts')
 </body>

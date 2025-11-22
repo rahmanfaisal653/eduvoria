@@ -3,18 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController; 
 use App\Http\Controllers\homepageController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserAdminController;
+use App\Http\Controllers\PostAdminController;
+use App\Http\Controllers\ReportAdminController;
+use App\Http\Controllers\SubcribeAdminController;
+use App\Http\Controllers\SubcribeUserController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\bookmarkController;
-use App\Http\Controllers\CommunityPostController;
-use App\Http\Controllers\CommunityEventController;
-use App\Http\Controllers\AdminCommunityController;
-
-
-
+use App\Http\Controllers\PostController;
 
 // Landing Page
 Route::get('/', function () {
@@ -22,25 +21,53 @@ Route::get('/', function () {
 })->name('landing');
 
 Route::get('/homepage', [homepageController::class, 'index'])->name('homepage');
+
+// Admin Routes
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     
     // 1. DASHBOARD ADMIN (Name: admin.dashboard)
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // 2. MANAGEMENT USERS (Name: admin.users)  
-    Route::get('/users', [AdminController::class, 'usersIndex'])->name('users');
+    // ==============================================================
+    // 2. MANAGEMENT USERS (DIPERBARUI)
+    // ==============================================================
+    // Route untuk menampilkan tabel (GET)
+    // Mengarah ke UserAdminController method usersindex
+    Route::get('/users', [UserAdminController::class, 'usersindex'])->name('users');
+
+    // Route untuk memproses form tambah user (POST)
+    // Ini yang dipanggil di form action="{{ route('admin.users.store') }}"
+    Route::post('/users/store', [UserAdminController::class, 'store'])->name('users.store');
+    Route::get('/users/edit/{id}', [UserAdminController::class, 'edit'])->name('users.edit');
+    Route::post('/users/update/{id}', [UserAdminController::class, 'update'])->name('users.update');
+    Route::get('/users/delete/{id}', [UserAdminController::class, 'destroy'])->name('users.delete');
+
+    // ==============================================================
+
 
     // 3. CONTENT & POSTINGAN (Name: admin.content)
-    Route::get('/content', [AdminController::class, 'contentIndex'])->name('content');
+    Route::get('/content', [PostAdminController::class, 'contentIndex'])->name('content');
 
-    // 4. LAPORAN & PELANGGARAN (Name: admin.reports.*)
-    Route::get('/reports/content', [AdminController::class, 'reportsContentIndex'])->name('reports');
+    Route::post('/content/store', [PostAdminController::class, 'store'])->name('content.store');
+    Route::get('/content/edit/{id}', [PostAdminController::class, 'edit'])->name('content.edit');
+    Route::post('/content/update/{id}', [PostAdminController::class, 'update'])->name('content.update');
+    Route::get('/content/delete/{id}', [PostAdminController::class, 'destroy'])->name('content.delete');
 
-    Route::get('/reports/subscribe', [AdminController::class, 'reportsSubscribeIndex'])->name('subscribe');
+    // 4. LAPORAN CONTENT (Name: admin.reports)
+    Route::get('/reports/content', [ReportAdminController::class, 'reportsContentIndex'])->name('reports');
 
-    // 5. PENGATURAN SISTEM (Name: admin.settings)
+    Route::post('/reports/content/update/{id}', [ReportAdminController::class, 'update'])->name('reports.update');
+    Route::get('/reports/content/delete/{id}', [ReportAdminController::class, 'destroy'])->name('reports.delete');
+
+
+    // 5. LAPORAN SUBSCRIBE (Name: admin.subscribe)
+    Route::get('/reports/subscribe', [SubcribeAdminController::class, 'reportsSubscribeIndex'])->name('subscribe');
+
+    Route::post('reports/subscribe/update/{id}', [SubcribeAdminController::class, 'update'])->name('subscribe.update');
+    Route::post('reports/subscribe/delete/{id}', [SubcribeAdminController::class, 'destroy'])->name('subscribe.destroy');
+
+    // 5. PENGATURAN SISTEM
     Route::get('/settings', function () {
-        // Konten placeholder untuk Pengaturan Sistem
         return view('admin.settings.index');
     })->name('settings');
 
@@ -64,6 +91,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         ->name('komunitas.destroy');
 
 });
+Route::post('/subscribe/store', [SubcribeUserController::class, 'store'])->name('user.subscribe.store');
+
+Route::post('/report/submit', [UserReportController::class, 'store'])->name('user.report.store');
 
 Route::get('/komunitas', [CommunityController::class, 'index'])->name('komunitas.index');
 

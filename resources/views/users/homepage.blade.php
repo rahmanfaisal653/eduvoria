@@ -125,6 +125,10 @@
             </aside>
         </div>
     </div>
+
+    {{-- MODAL LAPORAN POSTINGAN --}}
+    @include('componentsUser.user-report-modal')
+
 @endsection
 
 @push('scripts')
