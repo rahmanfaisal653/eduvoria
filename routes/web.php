@@ -5,6 +5,8 @@ use App\Http\Controllers\homepageController;
 use App\Http\Controllers\UserAdminController;
 use App\Http\Controllers\PostAdminController;
 use App\Http\Controllers\ReportAdminController;
+use App\Http\Controllers\SubcribeAdminController;
+use App\Http\Controllers\SubcribeUserController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\CommunityEventController;
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
+use App\Models\Subscribe;
 
 // use App\Http\Controllers\CommunityPostController;
 // use App\Http\Controllers\CommunityEventController;
@@ -77,14 +80,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // 4. LAPORAN CONTENT (Name: admin.reports)
     Route::get('/reports/content', [ReportAdminController::class, 'reportsContentIndex'])->name('reports');
 
-    Route::post('/reports/content/store', [ReportAdminController::class, 'store'])->name('reports.store');
-    Route::get('/reports/content/edit/{id}', [ReportAdminController::class, 'edit'])->name('reports.edit');
     Route::post('/reports/content/update/{id}', [ReportAdminController::class, 'update'])->name('reports.update');
     Route::get('/reports/content/delete/{id}', [ReportAdminController::class, 'destroy'])->name('reports.delete');
 
 
     // 5. LAPORAN SUBSCRIBE (Name: admin.subscribe)
-    // Route::get('/reports/subscribe', [AdminController::class, 'reportsSubscribeIndex'])->name('subscribe');
+    Route::get('/reports/subscribe', [SubcribeAdminController::class, 'reportsSubscribeIndex'])->name('subscribe');
+
+    Route::post('reports/subscribe/update/{id}', [SubcribeAdminController::class, 'update'])->name('subscribe.update');
+    Route::post('reports/subscribe/delete/{id}', [SubcribeAdminController::class, 'destroy'])->name('subscribe.destroy');
 
     // 5. PENGATURAN SISTEM
     Route::get('/settings', function () {
@@ -92,6 +96,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     })->name('settings');
 
 });
+Route::post('/subscribe/store', [SubcribeUserController::class, 'store'])->name('user.subscribe.store');
 
 Route::post('/report/submit', [UserReportController::class, 'store'])->name('user.report.store');
 

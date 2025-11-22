@@ -19,7 +19,7 @@ class UserAdminController extends Controller
         return view('componentsAdmin.add-user-modal');
     }
 
-    public function store(Request $request) // Biasakan pakai nama $request, bukan $x (standar Laravel)
+    public function store(Request $request) 
     {
         UserAdmin::create([
             'email' => $request->email,       

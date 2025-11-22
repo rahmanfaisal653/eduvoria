@@ -31,7 +31,7 @@
                 <span class="mr-3">🚨</span> Laporan & Pelanggaran
             </a>
             <!-- Sub-link Laporan Subscribe (Tautan ini akan menggunakan warna yang sama dengan tautan induk di atasnya) -->
-            <a href="" class="flex items-center p-3 rounded-lg @if(request()->routeIs('admin.subscribe')) bg-teal-600 font-semibold shadow-md @else text-gray-300 hover:bg-gray-700 @endif">
+            <a href="{{ route('admin.subscribe') }}" class="flex items-center p-3 rounded-lg @if(request()->routeIs('admin.subscribe')) bg-teal-600 font-semibold shadow-md @else text-gray-300 hover:bg-gray-700 @endif">
                 <span class="mr-3">💲</span> Laporan Subscribe
             </a>
 
