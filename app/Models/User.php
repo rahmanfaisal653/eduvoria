@@ -21,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_picture',
+        'bio',
+        'hobi',
+        'role',
+        'followers_count',
+        'following_count'
     ];
 
     /**
@@ -42,4 +48,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Relationship: User has many Posts
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    // Relationship: User has many Bookmarks
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
 }

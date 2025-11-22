@@ -19,12 +19,7 @@
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
     {{-- Logo --}}
     <div class="flex items-center">
-      <img
-        src="https://via.placeholder.com/32x32/14B8A6/ffffff?text=Logo"
-        alt="Logo Eduvoria"
-        class="h-8 w-8 mr-2 rounded-full"
-      />
-      <div class="text-2xl font-extrabold text-teal-600">Eduvoria</div>
+      <a href="{{ route('homepage') }}" class="text-2xl font-extrabold text-teal-600 hover:text-teal-700 transition">Eduvoria</a>
     </div>
 
     {{-- Navigasi --}}
@@ -76,9 +71,18 @@
       <div class="relative">
         <button
           id="profile-menu-button"
-          class="h-10 w-10 rounded-full bg-gray-300 ring-2 ring-transparent hover:ring-teal-500 transition duration-150 focus:outline-none"
+          class="h-10 w-10 rounded-full ring-2 ring-transparent hover:ring-teal-500 transition duration-150 focus:outline-none overflow-hidden"
           aria-expanded="false"
           aria-haspopup="true">
+          @auth
+            @if(Auth::user()->profile_picture)
+              <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+            @else
+              <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=F28A25&color=fff&size=40" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+            @endif
+          @else
+            <div class="bg-gray-300 w-full h-full"></div>
+          @endauth
         </button>
 
         <div
@@ -114,9 +118,11 @@
               class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700"
               role="menuitem" tabindex="-1">⚙️ Settings</a>
             <div class="border-t border-gray-100 my-1" role="separator"></div>
-            <a href="/Login & Regist/login.html"
-              class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
-              role="menuitem" tabindex="-1">🚪 Logout</a>
+            <form action="{{ route('logout') }}" method="POST">
+              @csrf
+              <button type="submit" class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 text-left"
+                role="menuitem" tabindex="-1">🚪 Logout</button>
+            </form>
           </div>
         </div>
       </div>

@@ -203,6 +203,3 @@ git push -u origin main
 
 ---
 
-# Butuh versi **PDF**, **DOCX**, atau mau aku **buatkan template dokumentasi resmi** seperti perusahaan?
-
-Tinggal bilang aja!

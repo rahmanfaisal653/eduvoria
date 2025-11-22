@@ -8,8 +8,18 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\bookmarkController;
+<<<<<<< HEAD
 use App\Http\Controllers\CommunityPostController;
 use App\Http\Controllers\CommunityEventController;
+=======
+<<<<<<< HEAD
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\AuthController;
+=======
+use App\Http\Controllers\CommunityPostController;
+use App\Http\Controllers\CommunityEventController;
+>>>>>>> 0d175a3 (Kode baru)
+>>>>>>> fitur-komunitas
 
 
 /*
@@ -23,46 +33,14 @@ use App\Http\Controllers\CommunityEventController;
 |
 */
 
-// === AUTH ===
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
 
-Route::post('/login', function () {
-    // simulasi berhasil login
-    return redirect()->route('homepage');
-})->name('login.submit');
+// Landing Page
+Route::get('/', function () {
+    return view('landing');
+})->name('landing');
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
-
-Route::post('/register', function () {
-    // simulasi register -> redirect ke login
-    return redirect()->route('login');
-})->name('register.submit');
-
-
-Route::redirect('/', '/homepage');
 Route::get('/homepage', [homepageController::class, 'index'])->name('homepage');
-Route::group(['prefix' => 'admin', 'as' => 'admin.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     
     // 1. DASHBOARD ADMIN (Name: admin.dashboard)
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -144,13 +122,27 @@ Route::get('/statistik', [StatisticsController::class, 'index'])->name('statisti
 Route::redirect('/statistic', '/statistik');
 Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
 
-route::get('/bookmark',[bookmarkController::class,'bookmark'])->name('bookmark');
+// Auth Routes
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'processLogin'])->name('login.submit');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'processRegister'])->name('register.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/profile', [profileController::class, 'profile'])->name('profile');
-Route::get('/posts/create', [profileController::class, 'create'])->name('posts.create');
-Route::post('/posts/store', [profileController::class, 'store'])->name('posts.store');
-Route::get('/posts/{id}/edit', [profileController::class, 'edit'])->name('posts.edit');
-Route::post('/posts/{id}/update', [profileController::class, 'update'])->name('posts.update');
-Route::get('/posts/{id}/delete', [profileController::class, 'destroy'])->name('posts.destroy');
-Route::get('/profile/edit', [profileController::class, 'editProfile'])->name('profile.edit');
-Route::post('/profile/update', [profileController::class, 'updateProfile'])->name('profile.update');
+// Protected Routes (require login)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [profileController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit', [profileController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [profileController::class, 'updateProfile'])->name('profile.update');
+    
+    // Post Routes
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{id}/update', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{id}/delete', [PostController::class, 'destroy'])->name('posts.destroy');
+    
+    // Bookmark Routes
+    Route::get('/bookmark', [bookmarkController::class, 'index'])->name('bookmark');
+    Route::post('/bookmark/toggle/{postId}', [bookmarkController::class, 'toggle'])->name('bookmark.toggle');
+});
