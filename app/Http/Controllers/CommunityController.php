@@ -30,9 +30,24 @@ class CommunityController extends Controller
         ];
 
         $suggestedGroups = [
-            ['name' => 'Fotografer Alam', 'members' => '2.1K', 'url' => '#', 'icon' => '📷'],
-            ['name' => 'Pecinta Tanaman', 'members' => '800',  'url' => '#', 'icon' => '🪴'],
-            ['name' => 'UI/UX Designer',  'members' => '4.5K', 'url' => '#', 'icon' => '💻'],
+            [
+                'name'    => 'Fotografer Alam',
+                'members' => '2.1K',
+                'url'     => route('komunitas.diskusi'),
+                'icon'    => '📷',
+            ],
+            [
+                'name'    => 'Pecinta Tanaman',
+                'members' => '800',
+                'url'     => route('komunitas.diskusi'),
+                'icon'    => '🪴',
+            ],
+            [
+                'name'    => 'UI/UX Designer',
+                'members' => '4.5K',
+                'url'     => route('komunitas.diskusi'),
+                'icon'    => '💻',
+            ],
         ];
 
         $upcomingEvents = [
@@ -40,22 +55,32 @@ class CommunityController extends Controller
             ['title' => 'Meetup Traveling',      'date' => 'Sabtu, 2 Nov', 'time' => '10:00 WIB', 'url' => '#'],
         ];
 
-        // arahkan ke folder resources/views/componentsUser/komunitas.blade.php
-        return view('users.komunitas.komunitas', compact('popularDiscussions','suggestedGroups','upcomingEvents'));
+        
+        return view(
+            'users.komunitas.komunitas',
+            compact('popularDiscussions','suggestedGroups','upcomingEvents')
+        );
     }
-    
-public function create()
-{
-    return view('users.komunitas.create'); 
-}
 
-public function saveDraft(Request $request)
-{
-    $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
-    ]);
-    return redirect()->route('komunitas')->with('success', 'Diskusi berhasil disimpan');
-}
+    public function create()
+    {
+        return view('users.komunitas.create');
+    }
 
+    public function saveDraft(Request $request)
+    {
+        $data = $request->validate([
+            'title'   => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        return redirect()->route('komunitas')->with('success', 'Diskusi berhasil disimpan');
+    }
+
+ 
+    public function diskusi()
+    {
+        
+        return view('users.komunitas.komunitasdiskusi');
+    }
 }
