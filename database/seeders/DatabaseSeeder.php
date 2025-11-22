@@ -10,9 +10,6 @@ use App\Models\Bookmark;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         // Create Admin User
@@ -124,5 +121,9 @@ class DatabaseSeeder extends Seeder
         echo "📧 User 2: siti@eduvoria.com | Password: password123\n";
         echo "📧 User 3: budi@eduvoria.com | Password: password123\n";
         echo "📚 5 Posts and 5 Bookmarks created\n\n";
+        
+        $this->call([
+            CommunitySeeder::class,
+        ]);
     }
 }

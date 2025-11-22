@@ -8,8 +8,13 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\bookmarkController;
+<<<<<<< HEAD
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
+=======
+use App\Http\Controllers\CommunityPostController;
+use App\Http\Controllers\CommunityEventController;
+>>>>>>> 0d175a3 (Kode baru)
 
 
 /*
@@ -54,10 +59,60 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
 });
 
-Route::get('/komunitas', [CommunityController::class, 'index'])->name('komunitas');
+Route::get('/komunitas', [CommunityController::class, 'index'])->name('komunitas.index');
+
+// FORM BUAT KOMUNITAS
 Route::get('/komunitas/create', [CommunityController::class, 'create'])->name('komunitas.create');
-Route::get('/komunitas/diskusi', [CommunityController::class, 'diskusi'])
-    ->name('komunitas.diskusi');
+
+// SIMPAN KOMUNITAS
+Route::post('/komunitas', [CommunityController::class, 'store'])->name('komunitas.store');
+
+// HALAMAN DETAIL KOMUNITAS (komunitasdiskusi.blade.php)
+Route::get('/komunitas/{id}', [CommunityController::class, 'show'])->name('komunitas.show');
+
+// FORM EDIT KOMUNITAS
+Route::get('/komunitas/{id}/edit', [CommunityController::class, 'edit'])->name('komunitas.edit');
+
+// UPDATE KOMUNITAS
+Route::put('/komunitas/{id}', [CommunityController::class, 'update'])->name('komunitas.update');
+
+// HAPUS KOMUNITAS
+Route::delete('/komunitas/{id}', [CommunityController::class, 'destroy'])->name('komunitas.destroy');
+
+Route::post('/komunitas/{communityId}/post', [CommunityPostController::class, 'store'])
+    ->name('community-posts.store');
+
+// EDIT form
+Route::get('/komunitas/{communityId}/post/{id}/edit', [CommunityPostController::class, 'edit'])
+    ->name('community-posts.edit');
+
+// UPDATE postingan
+Route::put('/komunitas/{communityId}/post/{id}', [CommunityPostController::class, 'update'])
+    ->name('community-posts.update');
+
+// DELETE postingan
+Route::delete('/komunitas/{communityId}/post/{id}', [CommunityPostController::class, 'destroy'])
+    ->name('community-posts.destroy');
+
+Route::get('/kalender-acara', [CommunityEventController::class, 'index'])
+    ->name('kalender.index');
+
+// Tambah acara dari halaman detail komunitas
+Route::post('/komunitas/{communityId}/events', [CommunityEventController::class, 'store'])
+    ->name('community-events.store');
+
+// Edit acara
+Route::get('/komunitas/{communityId}/events/{id}/edit', [CommunityEventController::class, 'edit'])
+    ->name('community-events.edit');
+
+// Update acara
+Route::put('/komunitas/{communityId}/events/{id}', [CommunityEventController::class, 'update'])
+    ->name('community-events.update');
+
+// Hapus acara
+Route::delete('/komunitas/{communityId}/events/{id}', [CommunityEventController::class, 'destroy'])
+    ->name('community-events.destroy');
+
 Route::get('/statistik', [StatisticsController::class, 'index'])->name('statistik');
 Route::redirect('/statistic', '/statistik');
 Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
