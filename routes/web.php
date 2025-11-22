@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController; 
 use App\Http\Controllers\homepageController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommunityController;
@@ -8,30 +9,11 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\bookmarkController;
-<<<<<<< HEAD
 use App\Http\Controllers\CommunityPostController;
 use App\Http\Controllers\CommunityEventController;
-=======
-<<<<<<< HEAD
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\AuthController;
-=======
-use App\Http\Controllers\CommunityPostController;
-use App\Http\Controllers\CommunityEventController;
->>>>>>> 0d175a3 (Kode baru)
->>>>>>> fitur-komunitas
+use App\Http\Controllers\AdminCommunityController;
 
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 
 // Landing Page
@@ -61,6 +43,25 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         // Konten placeholder untuk Pengaturan Sistem
         return view('admin.settings.index');
     })->name('settings');
+
+     Route::get('/komunitas', [AdminCommunityController::class, 'index'])
+        ->name('komunitas.index');
+
+    // Detail komunitas
+    Route::get('/komunitas/{id}', [AdminCommunityController::class, 'show'])
+        ->name('komunitas.show');
+
+    // Form edit komunitas
+    Route::get('/komunitas/{id}/edit', [AdminCommunityController::class, 'edit'])
+        ->name('komunitas.edit');
+
+    // Update komunitas
+    Route::put('/komunitas/{id}', [AdminCommunityController::class, 'update'])
+        ->name('komunitas.update');
+
+    // Hapus komunitas
+    Route::delete('/komunitas/{id}', [AdminCommunityController::class, 'destroy'])
+        ->name('komunitas.destroy');
 
 });
 
