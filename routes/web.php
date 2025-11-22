@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController; 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController; 
 use App\Http\Controllers\homepageController;
 use App\Http\Controllers\UserAdminController;
 use App\Http\Controllers\PostAdminController;
@@ -9,6 +10,10 @@ use App\Http\Controllers\ReportAdminController;
 use App\Http\Controllers\SubcribeAdminController;
 use App\Http\Controllers\SubcribeUserController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\UserReportController;
+use App\Http\Controllers\AdminCommunityController;
+use App\Http\Controllers\CommunityPostController;
+use App\Http\Controllers\CommunityEventController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\profileController;
@@ -25,8 +30,7 @@ Route::get('/homepage', [homepageController::class, 'index'])->name('homepage');
 // Admin Routes
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     
-    // 1. DASHBOARD ADMIN (Name: admin.dashboard)
-    // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // ==============================================================
     // 2. MANAGEMENT USERS (DIPERBARUI)
