@@ -42,10 +42,16 @@
       </a>
 
       {{-- Link Komunitas --}}
-      <a href="{{ route('komunitas') }}"
-         class="{{ request()->routeIs('komunitas') ? $active : $base }}">
-         Komunitas
+      <a href="{{ route('komunitas.index') }}"
+      class="{{ request()->routeIs('komunitas.*') ? $active : $base }}">
+       Komunitas
       </a>
+
+      {{-- Link Kalender Acara --}}
+       <a href="{{ route('kalender.index') }}"
+       class="{{ request()->routeIs('kalender.*') ? $active : $base }}">
+       Kalender Acara
+       </a>
     </nav>
 
     {{-- Search Bar --}}

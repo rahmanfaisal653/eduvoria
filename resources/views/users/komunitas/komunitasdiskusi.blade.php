@@ -1,333 +1,342 @@
-@extends('layouts.app') {{-- sesuaikan dengan layout milikmu --}}
+@extends('layouts.app')
 
-@section('title', 'Komunitas Diskusi')
+@section('title', $community->name . ' — Komunitas')
 
 @section('content')
-<style>
-    body {
-        background: #f5f7fb;
-    }
+<div class="space-y-6">
 
-    .kom-container {
-        max-width: 1140px;
-        margin: 0 auto;
-        padding: 24px 16px 40px;
-    }
-
-    .kom-hero-card {
-        border-radius: 24px;
-        border: none;
-        box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
-        overflow: hidden;
-        background: #fff;
-        margin-bottom: 24px;
-    }
-
-    .kom-hero-banner {
-        background: linear-gradient(90deg, #1d75ff, #00b3a4);
-        min-height: 190px;
-        display: flex;
-        align-items: center;
-        padding: 24px 40px;
-        color: #fff;
-    }
-
-    .kom-hero-banner h2 {
-        font-size: 32px;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .kom-hero-body {
-        padding: 24px 40px 28px;
-        background: #fff;
-    }
-
-    .kom-hero-body-title {
-        font-size: 20px;
-        font-weight: 600;
-    }
-
-    .kom-card-soft {
-        border-radius: 20px;
-        border: none;
-        background: #ffffff;
-        box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
-    }
-
-    .kom-card-soft-outline {
-        border-radius: 20px;
-        border: 1px solid #c9f1e4;
-        background: #f6fffb; /* hijau muda */
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-    }
-
-    .kom-textarea {
-        width: 100%;
-        border-radius: 16px;
-        border: 1px solid #e2e8f0;
-        padding: 10px 12px;
-        resize: vertical;
-        font-size: 14px;
-    }
-
-    .kom-btn-primary {
-        border-radius: 999px;
-        padding: 8px 28px;
-        font-weight: 600;
-        background: #06b48b;
-        border: 1px solid #06b48b;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    .kom-btn-primary:hover {
-        background: #04936f;
-        border-color: #04936f;
-    }
-
-    .kom-avatar-dot {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-    }
-
-    .kom-post-meta span {
-        margin-right: 18px;
-    }
-
-    /* FLEX LAYOUT TANPA BOOTSTRAP */
-
-    .kom-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 24px;
-        margin-bottom: 24px;
-    }
-
-    .kom-main {
-        flex: 1 1 100%;
-    }
-
-    .kom-side {
-        flex: 1 1 100%;
-    }
-
-    @media (min-width: 992px) {
-        .kom-main {
-            flex: 0 0 66.666%;
-            max-width: 66.666%;
-        }
-
-        .kom-side {
-            flex: 0 0 31%;
-            max-width: 31%;
-        }
-    }
-</style>
-
-<div class="kom-container">
-
-    {{-- ========================= HERO / HEADER ========================= --}}
-    <div class="kom-hero-card">
-        <div class="kom-hero-banner">
-            <h2><span class="me-2">📷</span>Fotografi Alam Nusantara</h2>
-        </div>
-
-        <div class="kom-hero-body">
-            <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
-                <div style="flex:1 1 260px;">
-                    <div style="color:#00a66a;" class="small fw-semibold mb-1">
-                        Grup Aktif • Sejak 2020
-                    </div>
-                    <div class="kom-hero-body-title mb-1">
-                        Room Diskusi Fotografi Alam
-                    </div>
-                    <p class="mb-0" style="color:#6b7280; font-size:14px;">
-                        Tempat berkumpulnya para pecinta fotografi alam. Bagikan hasil jepretan terbaik,
-                        diskusikan teknik, dan cari teman hunting baru.
-                    </p>
-                </div>
-
-                <div style="flex:0 0 auto; text-align:right;">
-                    <div style="margin-bottom:6px; color:#6b7280; font-weight:600; font-size:14px;">
-                        2,140 Anggota &nbsp;&nbsp; 120 Postingan/Minggu
-                    </div>
-                    <button class="kom-btn-primary">
-                        Gabung Grup
-                    </button>
-                </div>
-            </div>
-        </div>
+  {{-- Pesan sukses umum (misal setelah tambah / edit / hapus postingan) --}}
+  @if(session('success'))
+    <div class="mb-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-lg text-sm">
+      {{ session('success') }}
     </div>
+  @endif
 
-    {{-- =================== BARIS: FORM DISKUSI + ADMIN =================== --}}
-    <div class="kom-row">
-        {{-- Form diskusi (kiri) --}}
-        <div class="kom-main">
-            <div class="kom-card-soft-outline" style="padding:16px 20px 18px;">
-                <h6 class="fw-semibold mb-3" style="font-size:14px;">
-                    Mulai diskusi baru di grup ini:
-                </h6>
+  {{-- =========================
+       HEADER KOMUNITAS
+     ========================= --}}
+  <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
 
-                <form action="#" method="POST" enctype="multipart/form-data">
-                    @csrf
+    {{-- Background komunitas: pakai foto kalau ada, kalau tidak gradient --}}
+    @if($community->background_image)
+      <div class="h-40 bg-cover bg-center"
+           style="background-image: url('{{ asset('uploads/komunitas/'.$community->background_image) }}')">
+      </div>
+    @else
+      <div class="h-40 bg-gradient-to-r from-sky-500 to-emerald-500"></div>
+    @endif
 
-                    <div class="mb-3">
-                        <textarea
-                            class="kom-textarea"
-                            rows="3"
-                            placeholder="Apa yang ingin Anda bagikan hari ini? (Tips, Pertanyaan, Foto)"
-                        ></textarea>
-                    </div>
+    <div class="p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
 
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <div style="display:flex; align-items:center; gap:18px; font-size:13px;">
-                            <label style="cursor:pointer; color:#16a34a; margin:0;">
-                                <span style="margin-right:4px;">🖼</span> Tambah Foto
-                                <input type="file" name="foto" style="display:none;">
-                            </label>
+      {{-- Kiri: foto profil + nama komunitas --}}
+      <div class="flex items-center gap-4">
+        @if($community->profile_image)
+          <img src="{{ asset('uploads/komunitas/'.$community->profile_image) }}"
+               class="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-4 border-white object-cover -mt-12 sm:-mt-16">
+        @else
+          <div class="h-16 w-16 sm:h-20 sm:w-20 rounded-full border-4 border-white bg-slate-100 flex items-center justify-center text-2xl text-slate-500 -mt-12 sm:-mt-16">
+            {{ strtoupper(substr($community->name,0,1)) }}
+          </div>
+        @endif
 
-                            <label style="cursor:pointer; color:#6b7280; margin:0;">
-                                📎 Lampirkan File
-                                <input type="file" name="lampiran" style="display:none;">
-                            </label>
-                        </div>
+        <div class="mt-2 sm:mt-0">
+          <h1 class="text-xl sm:text-2xl font-bold text-slate-900">
+            {{ $community->name }}
+          </h1>
 
-                        <button type="submit" class="kom-btn-primary">
-                            Kirim Postingan
-                        </button>
-                    </div>
-                </form>
-            </div>
+          <p class="text-xs sm:text-sm text-emerald-100 bg-emerald-600 inline-block px-3 py-1 rounded-full mt-1">
+            Grup Aktif • Sejak {{ $community->created_at->format('Y') }}
+          </p>
+
+          <p class="mt-2 text-sm text-slate-600">
+            {{ $community->description ?: 'Belum ada deskripsi untuk komunitas ini.' }}
+          </p>
         </div>
+      </div>
 
-        {{-- Admin & Moderator (kanan atas) --}}
-        <div class="kom-side">
-            <div class="kom-card-soft" style="padding:18px 20px;">
-                <h6 class="fw-semibold mb-3" style="font-size:14px;">Admin &amp; Moderator</h6>
+      {{-- Kanan: statistik sederhana + tombol gabung --}}
+      <div class="text-right space-y-2">
+        <p class="text-xs text-slate-500">
+          {{ number_format($community->members_count) }} Anggota • 120 Postingan/Minggu
+        </p>
 
-                <div style="display:flex; align-items:center; margin-bottom:10px;">
-                    <div class="kom-avatar-dot" style="background:#ff4fa8; margin-right:8px;"></div>
-                    <div>
-                        <div class="fw-semibold" style="font-size:13px;">Dewi Lestari</div>
-                        <div style="font-size:12px;">
-                            <span style="color:#9ca3af;">(</span>
-                            <span style="color:#00a66a;">Admin</span>
-                            <span style="color:#9ca3af;">)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display:flex; align-items:center; margin-bottom:10px;">
-                    <div class="kom-avatar-dot" style="background:#2563eb; margin-right:8px;"></div>
-                    <div>
-                        <div class="fw-semibold" style="font-size:13px;">Budi Santoso</div>
-                        <div style="font-size:12px;">
-                            <span style="color:#9ca3af;">(</span>
-                            <span style="color:#3b82f6;">Moderator</span>
-                            <span style="color:#9ca3af;">)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="#" style="font-size:12px; color:#ef4444; text-decoration:none;">
-                    Laporkan Grup
-                </a>
-            </div>
-        </div>
+        <button
+          type="button"
+          class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700">
+          Gabung Grup
+        </button>
+      </div>
     </div>
+  </div>
 
-    {{-- =================== BARIS: POSTING + SIDEBAR BAWAH =================== --}}
-    <div class="kom-row">
-        {{-- Postingan (kiri) --}}
-        <div class="kom-main">
+  {{-- =========================
+       KONTEN BAWAH
+     ========================= --}}
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {{-- Post 1 --}}
-            <div class="kom-card-soft" style="padding:18px 20px; margin-bottom:24px;">
-                <div style="display:flex; justify-content:space-between;">
-                    <div>
-                        <div class="fw-semibold" style="font-size:14px;">Rifky Pratama</div>
-                        <div style="font-size:12px; color:#9ca3af;">2 jam yang lalu</div>
-                    </div>
-                    <div style="color:#9ca3af;">•••</div>
-                </div>
+    {{-- ======================================
+         KIRI: FORM POSTING + DAFTAR POSTING
+       ====================================== --}}
+    <div class="lg:col-span-2 space-y-6">
 
-                <p style="margin-top:14px; margin-bottom:10px; font-size:14px;">
-                    Menikmati sore yang cerah dengan secangkir kopi favorit. Apa rencana kalian hari ini?
-                </p>
+      {{-- FORM: MULAI DISKUSI BARU --}}
+      <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-5 space-y-4">
+        <h2 class="text-sm font-semibold text-emerald-800 mb-1">
+          Mulai diskusi baru di grup ini:
+        </h2>
 
-                <div style="margin-bottom:10px;">
-                    <img src="https://via.placeholder.com/640x320"
-                         alt="Post Image"
-                         style="width:100%; border-radius:16px;">
-                </div>
+        {{-- error validasi sederhana --}}
+        @if($errors->any())
+          <div class="mb-2 bg-red-50 text-red-700 px-3 py-2 rounded text-xs">
+            @foreach($errors->all() as $error)
+              <div>{{ $error }}</div>
+            @endforeach
+          </div>
+        @endif
 
-                <div class="kom-post-meta" style="font-size:12px; color:#9ca3af;">
-                    <span>❤️ 724 Suka</span>
-                    <span>💬 19 Komentar</span>
-                    <span>🔖 Bookmark</span>
-                    <span>↗ Bagikan</span>
-                </div>
+        <form action="{{ route('community-posts.store', $community->id) }}"
+              method="POST"
+              enctype="multipart/form-data"
+              class="space-y-3">
+          @csrf
+
+          <textarea
+            name="content"
+            rows="3"
+            class="w-full rounded-2xl border border-emerald-100 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            placeholder="Apa yang ingin Anda bagikan hari ini? (Tips, Pertanyaan, Foto)">{{ old('content') }}</textarea>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-4">
+              <label class="inline-flex items-center gap-1 cursor-pointer">
+                <span class="text-emerald-700 font-semibold">📷 Tambah Foto</span>
+                <input type="file" name="image" class="hidden">
+              </label>
             </div>
 
-            {{-- Post 2 --}}
-            <div class="kom-card-soft" style="padding:18px 20px;">
-                <div style="display:flex; justify-content:space-between;">
-                    <div>
-                        <div class="fw-semibold" style="font-size:14px;">Dewi Lestari</div>
-                        <div style="font-size:12px; color:#9ca3af;">5 jam yang lalu</div>
-                    </div>
-                    <div style="color:#9ca3af;">•••</div>
-                </div>
+            <button type="submit"
+                    class="px-5 py-2 rounded-full bg-emerald-600 text-white font-semibold text-sm hover:bg-emerald-700">
+              Kirim Postingan
+            </button>
+          </div>
+        </form>
+      </div>
 
-                <p style="margin-top:14px; margin-bottom:0; font-size:14px;">
-                    Baru saja menyelesaikan proyek yang cukup menantang, hasilnya sangat memuaskan.
-                    Kerja keras selalu terbayar. #ProyekBaru #UIUX
-                </p>
+      {{-- DAFTAR POSTINGAN KOMUNITAS --}}
+      @forelse ($posts as $post)
+        <article class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 space-y-3">
 
-                <div class="kom-post-meta" style="font-size:12px; color:#9ca3af; margin-top:10px;">
-                    <span>❤️ 452 Suka</span>
-                    <span>💬 8 Komentar</span>
-                    <span>🔖 Bookmark</span>
-                    <span>↗ Bagikan</span>
-                </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-semibold text-slate-900">{{ $post->author_name ?? 'User' }}</p>
+              <p class="text-xs text-slate-500">{{ $post->created_at->diffForHumans() }}</p>
             </div>
-        </div>
 
-        {{-- Sidebar bawah (kanan) --}}
-        <div class="kom-side">
+            {{-- tombol EDIT & HAPUS postingan --}}
+            <div class="flex items-center gap-2 text-xs">
+              <a href="{{ route('community-posts.edit', [$community->id, $post->id]) }}"
+                 class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-50">
+                Edit
+              </a>
 
-            {{-- Anggota Terbaru --}}
-            <div class="kom-card-soft" style="padding:18px 20px; margin-bottom:24px;">
-                <h6 class="fw-semibold mb-3" style="font-size:14px;">Anggota Terbaru</h6>
-
-                <div style="display:flex; align-items:center; margin-bottom:12px;">
-                    <div style="display:flex;">
-                        <div class="kom-avatar-dot" style="background:#fb7185; margin-right:4px;"></div>
-                        <div class="kom-avatar-dot" style="background:#f97316; margin-right:4px;"></div>
-                        <div class="kom-avatar-dot" style="background:#22c55e; margin-right:4px;"></div>
-                        <div class="kom-avatar-dot" style="background:#3b82f6; margin-right:4px;"></div>
-                        <div class="kom-avatar-dot" style="background:#a855f7; margin-right:4px;"></div>
-                    </div>
-                    <span style="font-size:12px; margin-left:6px; font-weight:600; color:#6366f1;">+12</span>
-                </div>
-
-                <button class="kom-btn-primary" style="width:100%; padding-block:6px; background:#fff; color:#16a34a; border-color:#16a34a;">
-                    Lihat Semua Anggota
+              <form action="{{ route('community-posts.destroy', [$community->id, $post->id]) }}"
+                    method="POST"
+                    onsubmit="return confirm('Yakin ingin menghapus postingan ini?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                        class="px-2 py-1 rounded bg-red-600 text-white hover:bg-red-700">
+                  Hapus
                 </button>
+              </form>
             </div>
+          </div>
 
-            {{-- Aturan Grup --}}
-            <div class="kom-card-soft" style="padding:18px 20px;">
-                <h6 class="fw-semibold mb-3" style="font-size:14px;">Aturan Grup</h6>
-                <ol style="font-size:12px; padding-left:18px; margin:0; color:#6b7280;">
-                    <li>Hormati karya anggota lain.</li>
-                    <li>Postingan harus relevan dengan fotografi alam.</li>
-                    <li>Dilarang keras spam atau promosi ilegal.</li>
-                </ol>
+          <p class="text-sm text-slate-700">
+            {{ $post->content }}
+          </p>
+
+          @if($post->image)
+            <div class="mt-2">
+              <img src="{{ asset('uploads/postingan_komunitas/'.$post->image) }}"
+                   class="rounded-2xl max-h-80 object-cover w-full">
             </div>
+          @endif
+
+        </article>
+      @empty
+        <div class="bg-white rounded-3xl možnostshadow-sm border border-slate-200 p-5 text-sm text-slate-500">
+          Belum ada postingan di komunitas ini.
         </div>
+      @endforelse
+
     </div>
+
+    {{-- ======================================
+         KANAN: ADMIN, ANGGOTA, KALENDER
+       ====================================== --}}
+    <div class="space-y-6">
+
+      {{-- ADMIN & MODERATOR (placeholder) --}}
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 space-y-3">
+        <h2 class="text-sm font-semibold text-slate-800">Admin & Moderator</h2>
+
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="h-3 w-3 rounded-full bg-pink-500"></span>
+              <span>Dewi Lestari</span>
+            </div>
+            <span class="text-xs text-pink-500 font-semibold">(Admin)</span>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="h-3 w-3 rounded-full bg-blue-500"></span>
+              <span>Budi Santoso</span>
+            </div>
+            <span class="text-xs text-blue-500 font-semibold">(Moderator)</span>
+          </div>
+        </div>
+
+        <button type="button" class="mt-3 text-xs text-red-500">
+          Laporkan Grup
+        </button>
+      </div>
+
+      {{-- ANGGOTA TERBARU (placeholder) --}}
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 space-y-3">
+        <h2 class="text-sm font-semibold text-slate-800">Anggota Terbaru</h2>
+
+        <div class="flex items-center gap-2">
+          <span class="h-7 w-7 rounded-full bg-rose-400"></span>
+          <span class="h-7 w-7 rounded-full bg-amber-400"></span>
+          <span class="h-7 w-7 rounded-full bg-emerald-400"></span>
+          <span class="h-7 w-7 rounded-full bg-sky-400"></span>
+          <span class="h-7 w-7 rounded-full bg-violet-400"></span>
+          <span class="text-xs text-slate-500">+12</span>
+        </div>
+
+        <button type="button"
+                class="mt-3 w-full text-center text-xs font-semibold text-emerald-700 border border-emerald-600 rounded-full py-2 hover:bg-emerald-50">
+          Lihat Semua Anggota
+        </button>
+      </div>
+
+    {{-- KALENDER ACARA --}}
+<div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 space-y-4">
+  <h2 class="text-sm font-semibold text-slate-800">Kalender Acara</h2>
+
+  {{-- FORM TAMBAH ACARA (disamakan dengan Edit Acara) --}}
+  <form action="{{ route('community-events.store', $community->id) }}"
+        method="POST"
+        class="space-y-3 text-xs">
+    @csrf
+
+    {{-- Judul --}}
+    <input
+      type="text"
+      name="title"
+      value="{{ old('title') }}"
+      class="w-full border border-slate-300 rounded-2xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+      placeholder="Judul acara"
+      required>
+
+    {{-- Deskripsi --}}
+    <textarea
+      name="description"
+      rows="2"
+      class="w-full border border-slate-300 rounded-2xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+      placeholder="Deskripsi singkat acara (opsional)">{{ old('description') }}</textarea>
+
+    {{-- Tanggal & Jam mulai --}}
+    <div class="grid grid-cols-2 gap-2">
+      <input
+        type="date"
+        name="event_date"
+        value="{{ old('event_date') }}"
+        class="w-full border border-slate-300 rounded-2xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+        required>
+
+      <input
+        type="time"
+        name="start_time"
+        value="{{ old('start_time') }}"
+        class="w-full border border-slate-300 rounded-2xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+        placeholder="Jam mulai">
+    </div>
+
+    {{-- Jam selesai --}}
+    <input
+      type="time"
+      name="end_time"
+      value="{{ old('end_time') }}"
+      class="w-full border border-slate-300 rounded-2xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+      placeholder="Jam selesai (opsional)">
+
+    {{-- Lokasi --}}
+    <input
+      type="text"
+      name="location"
+      value="{{ old('location') }}"
+      class="w-full border border-slate-300 rounded-2xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+      placeholder="Lokasi (opsional)">
+
+    <button type="submit"
+            class="w-full mt-1 text-center text-xs font-semibold text-white bg-emerald-600 rounded-full py-2 hover:bg-emerald-700">
+      + Tambah Acara
+    </button>
+  </form>
+
+  {{-- DAFTAR ACARA KOMUNITAS INI --}}
+  <div class="space-y-3 text-sm">
+    @forelse($events as $event)
+      <div class="border border-slate-200 rounded-2xl px-3 py-2">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <p class="font-medium text-slate-900">{{ $event->title }}</p>
+            <p class="text-xs text-slate-500">
+              {{ \Carbon\Carbon::parse($event->event_date)->format('d M Y') }}
+              @if($event->start_time)
+                • {{ substr($event->start_time, 0, 5) }} WIB
+              @endif
+              @if($event->end_time)
+                – {{ substr($event->end_time, 0, 5) }} WIB
+              @endif
+            </p>
+            @if($event->location)
+              <p class="text-xs text-slate-500 mt-1">📍 {{ $event->location }}</p>
+            @endif
+          </div>
+
+          <div class="flex flex-col gap-1 text-[11px]">
+            <a href="{{ route('community-events.edit', [$community->id, $event->id]) }}"
+               class="px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-50 text-slate-700 text-center">
+              Edit
+            </a>
+
+            <form action="{{ route('community-events.destroy', [$community->id, $event->id]) }}"
+                  method="POST"
+                  onsubmit="return confirm('Yakin ingin menghapus acara ini?')">
+              @csrf
+              @method('DELETE')
+              <button type="submit"
+                      class="px-2 py-0.5 rounded bg-red-600 text-white hover:bg-red-700">
+                Hapus
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    @empty
+      <p class="text-xs text-slate-500">
+        Belum ada acara terjadwal untuk komunitas ini.
+      </p>
+    @endforelse
+  </div>
+</div>
+
+    </div>
+  </div>
 </div>
 @endsection
