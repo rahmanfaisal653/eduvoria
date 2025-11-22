@@ -5,66 +5,53 @@
 @section('content')
     <h1 class="text-3xl font-bold text-gray-800 mb-8">Simpanan Saya (Bookmark) 🔖</h1>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-        <!-- SIDEBAR KATEGORI -->
-        <aside class="lg:col-span-1 space-y-4">
-            <div class="bg-white p-5 rounded-xl shadow-lg">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Kategori</h2>
-                <ul class="space-y-2 text-sm">
-                    <li>
-                        <a href="#" class="flex justify-between items-center py-2 px-3 rounded-lg bg-teal-50 text-teal-700 font-semibold">
-                            Semua Item <span class="text-xs font-normal">(5)</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex justify-between items-center py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100">
-                            Desain & UI/UX <span class="text-xs font-normal">(2)</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex justify-between items-center py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100">
-                            Tips Karir <span class="text-xs font-normal">(1)</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex justify-between items-center py-2 px-3 rounded-lg text-gray-600 hover:bg-gray-100">
-                            Traveling <span class="text-xs font-normal">(2)</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <button class="w-full mt-4 text-sm font-semibold text-teal-600 hover:text-teal-800 border-t border-gray-100 pt-3">
-                    + Buat Kategori Baru
-                </button>
-            </div>
-        </aside>
-
-        <!-- LIST BOOKMARK -->
-        <section class="lg:col-span-3 space-y-6">
-            @foreach ($bookmarks as $key => $value)
-                <div class="bg-white p-5 rounded-xl shadow-lg border-l-4 border-cyan-500">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-2">
-                                <div class="h-8 w-8 rounded-full bg-pink-400 flex-shrink-0"></div>
-                                <div>
-                                    <p class="font-semibold text-gray-900">{{ $value['nama'] }}</p>
-                                    <p class="text-xs text-gray-500">Disimpan {{ $value['waktu'] }} hari yang lalu</p>
-                                </div>
+    <div class="space-y-6">
+        @forelse ($bookmarks as $bookmark)
+            <div class="bg-white p-5 rounded-xl shadow-lg border-l-4 border-cyan-500">
+                <div class="flex justify-between items-start">
+                    <div class="flex-grow">
+                        <div class="flex items-center space-x-3 mb-2">
+                            @if($bookmark->post->user->profile_picture)
+                                <img src="{{ asset('storage/' . $bookmark->post->user->profile_picture) }}" alt="{{ $bookmark->post->user->name }}" class="h-10 w-10 rounded-full object-cover">
+                            @else
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($bookmark->post->user->name) }}&background=F28A25&color=fff&size=40" alt="{{ $bookmark->post->user->name }}" class="h-10 w-10 rounded-full">
+                            @endif
+                            <div>
+                                <p class="font-semibold text-gray-900">{{ $bookmark->post->user->name }}</p>
+                                <p class="text-xs text-gray-500">Disimpan {{ $bookmark->created_at->diffForHumans() }}</p>
                             </div>
-                            <p class="mt-3 text-gray-700">{{ $value['isi'] }}</p>
-                            <div class="mt-2 text-xs font-medium text-teal-600">#Desain & UI/UX</div>
                         </div>
+                        <p class="mt-3 text-gray-700">{{ $bookmark->post->content }}</p>
                         
-                        <div class="flex flex-col items-end space-y-1">
-                            <button class="text-gray-400 hover:text-red-500 text-lg">&times;</button>
-                            <span class="text-sm text-gray-500 mt-2">❤ {{ $value['like'] }}</span>
-                            <span class="text-sm text-gray-500">💬 {{ $value['komentar'] }}</span>
+                        @if($bookmark->post->image)
+                            <img src="{{ asset('storage/' . $bookmark->post->image) }}" 
+                                 alt="Post Image" 
+                                 class="mt-3 w-full rounded-lg object-cover max-h-64"/>
+                        @endif
+
+                        <div class="mt-3 text-sm text-gray-500">
+                            <span>❤ {{ $bookmark->post->likes_count }} Suka</span>
                         </div>
                     </div>
+                    
+                    <div class="flex flex-col items-end space-y-1 ml-4">
+                        <form action="{{ route('bookmark.toggle', $bookmark->post->id) }}" method="POST" class="bookmark-form">
+                            @csrf
+                            <button type="submit" class="text-red-500 hover:text-red-700 text-lg" title="Hapus dari bookmark">
+                                🗑️
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            @endforeach
-        </section>
+            </div>
+        @empty
+            <div class="text-center py-12 bg-white rounded-xl shadow">
+                <p class="text-gray-500 text-lg">Belum ada postingan yang di-bookmark.</p>
+                <p class="text-gray-400 text-sm mt-2">Klik ikon 🔖 pada postingan untuk menyimpannya di sini.</p>
+                <a href="{{ route('homepage') }}" class="inline-block mt-4 bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700">
+                    Lihat Postingan
+                </a>
+            </div>
+        @endforelse
     </div>
 @endsection

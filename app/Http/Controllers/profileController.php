@@ -3,90 +3,57 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class profileController extends Controller
 {
     public function profile()
     {
-        // Data profil hardcode
-        $profiles = [
-            'nama' => 'Faisal',
-            'hobi' => ['fotografi','sepak bola','catur'],
-            'bio' => 'God is good',
-            'pengikut' => '400k',
-            'mengikuti' => '593',
-            'postingan' => '213'
-        ];
+        $user = Auth::user();
+        
+        // Load user posts
+        $posts = Post::where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
-        // Postingan hardcode
-        $profilePosts = [
-            ['id' => 1, 'nama' => 'Faisal', 'waktu' => '5', 'isi' => 'jangan lupa kerjain pr guys', 'like' => '15k', 'komentar' => '2k'],
-            ['id' => 2, 'nama' => 'Faisal', 'waktu' => '23', 'isi' => 'mama said im the best :)', 'like' => '50k', 'komentar' => '5k'],
-        ];
-
-        // Urutkan biar terbaru di atas
-        $profilePosts = array_reverse($profilePosts);
-
-        return view('users.profile', compact('profiles', 'profilePosts'));
-    }
-
-    public function create()
-    {
-        return view('users.postingan.create');
-    }
-
-    public function store(Request $request)
-    {
-        // Simulasi tambah postingan
-        $newPost = [
-            'id' => 3,
-            'nama' => 'Faisal',
-            'waktu' => '1',
-            'isi' => $request->isi,
-            'like' => '0',
-            'komentar' => '0',
-        ];
-
-        // Redirect aja tanpa data baru (karena hardcode)
-        return redirect('/profile')->with('success', 'Postingan berhasil ditambahkan!');
-    }
-
-    public function edit($id)
-    {
-        // Hardcode contoh postingan yang sedang diedit
-        $post = [
-            'id' => $id,
-            'nama' => 'Faisal',
-            'isi' => 'Ini isi postingan contoh yang bisa diedit.'
-        ];
-
-        return view('users.postingan.editPostingan', compact('post'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        // Tidak benar-benar mengubah data (karena hardcode)
-        return redirect('/profile')->with('success', "Postingan ID {$id} berhasil diperbarui!");
-    }
-
-    public function destroy($id)
-    {
-        // Tidak benar-benar menghapus (karena hardcode)
-        return redirect('/profile')->with('success', "Postingan ID {$id} berhasil dihapus!");
+        return view('users.profile', compact('user', 'posts'));
     }
 
     public function editProfile()
     {
-        $profile = [
-            'nama' => 'Faisal',
-            'bio' => 'God is good',
-        ];
-        return view('users.editProfile', compact('profile'));
+        $user = Auth::user();
+        return view('users.editProfile', compact('user'));
     }
 
     public function updateProfile(Request $request)
     {
-        // Tidak benar-benar update (karena hardcode)
-        return redirect('/profile')->with('success', 'Profil berhasil diperbarui (simulasi)!');
-}
+        $user = Auth::user();
+        
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'bio' => 'nullable|string|max:1000',
+            'hobi' => 'nullable|string|max:255',
+            'profile_picture' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048'
+        ]);
+
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if exists
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+            
+            $user->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
+        }
+
+        $user->name = $request->name;
+        $user->bio = $request->bio;
+        $user->hobi = $request->hobi;
+        $user->save();
+
+        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
+    }
 }
