@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController; 
 use App\Http\Controllers\homepageController;
 use App\Http\Controllers\UserAdminController;
 use App\Http\Controllers\PostAdminController;
@@ -8,36 +10,15 @@ use App\Http\Controllers\ReportAdminController;
 use App\Http\Controllers\SubcribeAdminController;
 use App\Http\Controllers\SubcribeUserController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\UserReportController;
+use App\Http\Controllers\AdminCommunityController;
+use App\Http\Controllers\CommunityPostController;
+use App\Http\Controllers\CommunityEventController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\bookmarkController;
-use App\Http\Controllers\UserReportController;
-
-use App\Http\Controllers\CommunityPostController;
-use App\Http\Controllers\CommunityEventController;
-
-
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\AuthController;
-use App\Models\Subscribe;
-
-// use App\Http\Controllers\CommunityPostController;
-// use App\Http\Controllers\CommunityEventController;
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
 
 // Landing Page
 Route::get('/', function () {
@@ -49,8 +30,7 @@ Route::get('/homepage', [homepageController::class, 'index'])->name('homepage');
 // Admin Routes
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     
-    // 1. DASHBOARD ADMIN (Name: admin.dashboard)
-    // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // ==============================================================
     // 2. MANAGEMENT USERS (DIPERBARUI)
@@ -94,6 +74,25 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/settings', function () {
         return view('admin.settings.index');
     })->name('settings');
+
+     Route::get('/komunitas', [AdminCommunityController::class, 'index'])
+        ->name('komunitas.index');
+
+    // Detail komunitas
+    Route::get('/komunitas/{id}', [AdminCommunityController::class, 'show'])
+        ->name('komunitas.show');
+
+    // Form edit komunitas
+    Route::get('/komunitas/{id}/edit', [AdminCommunityController::class, 'edit'])
+        ->name('komunitas.edit');
+
+    // Update komunitas
+    Route::put('/komunitas/{id}', [AdminCommunityController::class, 'update'])
+        ->name('komunitas.update');
+
+    // Hapus komunitas
+    Route::delete('/komunitas/{id}', [AdminCommunityController::class, 'destroy'])
+        ->name('komunitas.destroy');
 
 });
 Route::post('/subscribe/store', [SubcribeUserController::class, 'store'])->name('user.subscribe.store');
