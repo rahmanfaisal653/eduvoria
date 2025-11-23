@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('priority')->default('low');
             $table->text('content_summary');
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

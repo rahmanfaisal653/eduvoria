@@ -36,6 +36,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">ID Laporan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Tipe Pelanggaran</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Target</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Foto</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Prioritas</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-red-700 uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -59,6 +60,19 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ Str::limit($report->content_summary, 30) }}
                             <div class="text-xs text-gray-400 mt-1">Oleh: {{ $report->reported_by }}</div>
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if ($report->foto)
+                                {{-- Menggunakan asset() untuk mengakses symlink public/storage --}}
+                                <a href="{{ asset('storage/' . $report->foto) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $report->foto) }}" 
+                                        alt="Foto Laporan" 
+                                        class="h-16 w-16 object-cover rounded-md shadow hover:shadow-lg transition cursor-pointer">
+                                </a>
+                            @else
+                                <span class="text-xs text-gray-500">Tidak ada lampiran</span>
+                            @endif
                         </td>
 
                         {{-- 4. PRIORITAS (Logika Warna Manual) --}}

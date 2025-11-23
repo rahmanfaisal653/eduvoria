@@ -13,11 +13,6 @@ class ReportAdminController extends Controller
         return view('admin.reports_content', compact('reports'));
     }
 
-    public function create()
-    {
-        return view('componentsAdmin.add-report-modal');
-    }
-
     public function store(Request $request)
     {
         ReportAdmin::create([
@@ -39,13 +34,18 @@ class ReportAdminController extends Controller
 
     public function update(Request $request, $id)
     {
+        $filePath = null; 
+        if ($request->hasFile('foto')) {
+            // Simpan file ke storage/app/public/reports (disk 'public')
+            $filePath = $request->file('foto')->store('reports', 'public');
+        }
+
         $report = ReportAdmin::findOrFail($id);
         $report->update([
             'type' => $request->type,
-            'reported_by' => $request->reported_by,
-            'description' => $request->description,
             'priority' => $request->priority,
-            'content_summary' => $request->content_summary,
+            'description' => $request->description,
+            'foto' => $filePath,
         ]);
 
         return redirect()->route('admin.reports');
