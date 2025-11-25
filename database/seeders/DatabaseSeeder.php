@@ -125,6 +125,7 @@ class DatabaseSeeder extends Seeder
         
         $this->call([
             CommunitySeeder::class,
+            CommunityPostSeeder::class,
         ]);
     }
 }
