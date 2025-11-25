@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\PostAdmin;
+use App\Models\Post;
 
 class PostAdminController extends Controller
 {
     public function contentIndex()
     {
-        $posts = PostAdmin::all();
+        $posts = Post::with('user')->get();
         return view('admin.content', compact('posts'));
     }
 
@@ -20,27 +20,42 @@ class PostAdminController extends Controller
 
     public function store(Request $request)
     {
-        PostAdmin::create([
+        $imagePath = null;
+        
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('posts', 'public');
+        }
+        
+        $staticAdminId = 1; 
+
+        Post::create([
+            'user_id' => $staticAdminId, 
             'content' => $request->content,
-            'author' => $request->author,
+            'image' => $imagePath, 
             'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.content');
+        return redirect()->route('admin.content')->with('success', 'Post berhasil dibuat!');
     }
 
     public function edit($id)
     {
-        $post = PostAdmin::findOrFail($id);
+        $post = Post::findOrFail($id);
         return view('componentsAdmin.edit-post-modal', compact('post'));
     }
 
     public function update(Request $request, $id)
     {
-        $post = PostAdmin::findOrFail($id);
+
+        $post = Post::findOrFail($id);
+        
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('posts', 'public');
+        }
+
         $post->update([
             'content' => $request->content,
-            'author' => $request->author,
+            'image' => $imagePath ?? $post->image, 
             'status' => $request->status,
         ]);
 
@@ -49,7 +64,7 @@ class PostAdminController extends Controller
 
     public function destroy($id)
     {
-        $post = PostAdmin::findOrFail($id);
+        $post = Post::findOrFail($id);
         $post->delete();
 
         return redirect()->route('admin.content');

@@ -11,8 +11,9 @@
         </div>
         
         {{-- FORM TAMBAH --}}
-        {{-- Action mengarah ke route store yang sudah kita buat --}}
-        <form id="add-post-form" method="POST" action="{{ route('admin.content.store') }}">
+        <form id="add-post-form" method="POST" 
+              action="{{ route('admin.content.store') }}" 
+              enctype="multipart/form-data"> {{-- WAJIB: Tambahkan ini untuk upload file --}}
             @csrf
 
             <div class="space-y-4 mb-4 max-h-96 overflow-y-auto px-1">
@@ -25,13 +26,20 @@
                         placeholder="Tulis apa yang sedang terjadi..."></textarea>
                 </div>
                 
-                {{-- 2. INPUT PENULIS --}}
+                {{-- 2. INPUT GAMBAR (BARU: Ditambahkan untuk upload file) --}}
                 <div>
-                    <label for="add-author" class="block text-sm font-semibold text-gray-800 mb-1">Nama Penulis</label>
-                    <input type="text" name="author" id="add-author" required
-                        class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-teal-500 focus:ring-teal-500"
-                        placeholder="Misal: Admin Sekolah">
+                    <label for="add-image" class="block text-sm font-semibold text-gray-800 mb-1">Unggah Gambar (Opsional)</label>
+                    <input type="file" name="image" id="add-image" accept="image/*"
+                        class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-teal-500 focus:ring-teal-500">
                 </div>
+                
+                {{-- INPUT PENULIS (DIHAPUS KARENA TIDAK DIGUNAKAN DI CONTROLLER STORE) --}}
+                {{-- Jika Anda tetap ingin menampilkan nama Penulis yang sedang login, gunakan input text read-only --}}
+                {{-- <div>
+                    <label class="block text-sm font-semibold text-gray-800 mb-1">Penulis</label>
+                    <input type="text" readonly value="{{ auth()->user()->name ?? 'Guest' }}" class="w-full rounded-lg border border-gray-300 p-2 text-sm bg-gray-100 text-gray-600">
+                </div> --}}
+
 
                 {{-- 3. INPUT STATUS --}}
                 <div>
@@ -68,7 +76,7 @@
 </div>
 
 <script>
-    // --- LOGIKA MODAL TAMBAH POSTINGAN ---
+    // --- LOGIKA MODAL TAMBAH POSTINGAN (Tidak ada perubahan, kode JS Anda sudah benar) ---
     const addPostBtn = document.getElementById('add-post-btn');
     const addPostModal = document.getElementById('add-post-modal');
     const addPostForm = document.getElementById('add-post-form');

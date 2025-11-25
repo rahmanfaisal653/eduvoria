@@ -13,7 +13,8 @@ class Post extends Model
         'user_id',
         'content',
         'image',
-        'likes_count'
+        'likes_count',
+        'status'
     ];
 
     // Relationship: Post belongs to User

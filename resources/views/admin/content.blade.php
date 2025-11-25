@@ -38,6 +38,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">ID</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Konten</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Penulis</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Foto Konten</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -57,12 +58,26 @@
                             {{ Str::limit($post->content, 40) }}
                         </td>
 
-                        {{-- 3. PENULIS --}}
+                        {{-- 3. PENULIS (MEMPERBAIKI: Menggunakan Relasi 'user' untuk mendapatkan 'name') --}}
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $post->author }}
+                            {{ $post->user->name }}
                         </td>
 
-                        {{-- 4. STATUS (Logika Warna) --}}
+                        {{-- 4. Foto Konten --}}
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{-- Cek apakah post memiliki gambar (image) --}}
+                            @if ($post->image)
+                                <a href="{{ asset('storage/' . $post->image) }}" target="_blank" title="Lihat Gambar Penuh">
+                                    <img src="{{ asset('storage/' . $post->image) }}" 
+                                         alt="Foto Konten #{{ $post->id }}" 
+                                         class="h-10 w-10 object-cover rounded-md shadow-sm">
+                                </a>
+                            @else
+                                <span class="text-gray-400">Tidak ada foto</span>
+                            @endif
+                        </td>
+
+                        {{-- 5. STATUS (Logika Warna) --}}
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php
                                 // Tentukan warna berdasarkan status
@@ -78,22 +93,23 @@
                             </span>
                         </td>
 
-                        {{-- 5. AKSI --}}
+                        {{-- 6. AKSI --}}
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
-    
-                        {{-- Tombol LIHAT --}}
+
                         <a href="#" 
                         class="edit-post-btn text-blue-600 hover:text-blue-900" 
                         data-id="{{ $post->id }}"
                         data-content="{{ $post->content }}"
-                        data-author="{{ $post->author }}"
+                        data-user-id="{{ $post->user_id }}" {{-- Mengirim ID Penulis --}}
+                        data-user-name="{{ $post->user->name }}" {{-- Mengirim Nama Penulis --}}
                         data-status="{{ $post->status }}">
                         Edit
                         </a>
 
                         {{-- Tombol HAPUS --}}
                         <a href="{{ route('admin.content.delete', $post->id) }}" 
-                        class="text-red-600 hover:text-red-900 font-semibold cursor-pointer">
+                        class="text-red-600 hover:text-red-900 font-semibold cursor-pointer"
+                        onclick="return confirm('Apakah Anda yakin ingin menghapus postingan ini?');"> {{-- Tambahkan konfirmasi --}}
                         Delete
                         </a>
                     </td>
