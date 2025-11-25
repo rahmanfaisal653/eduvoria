@@ -43,7 +43,7 @@
                         
                         {{-- 1. NAMA (Ganti 'name' jadi 'username' sesuai database, hapus tanda kutip) --}}
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ $user->username }}
+                            {{ $user->name }}
                         </td>
 
                         {{-- 2. EMAIL --}}

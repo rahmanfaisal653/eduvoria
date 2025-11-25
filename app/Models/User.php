@@ -26,7 +26,8 @@ class User extends Authenticatable
         'hobi',
         'role',
         'followers_count',
-        'following_count'
+        'following_count',
+        'status'
     ];
 
     /**

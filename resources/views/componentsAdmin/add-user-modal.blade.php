@@ -16,7 +16,7 @@
                 <!-- Bidang Username -->
                 <div>
                     <label for="new-username" class="block text-sm font-medium text-gray-700">Username</label>
-                    <input type="text" name="username" id="new-username" required placeholder="username_baru" class="mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500"/>
+                    <input type="text" name="name" id="new-username" required placeholder="username_baru" class="mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500"/>
                 </div>
 
                 <!-- Bidang Password -->

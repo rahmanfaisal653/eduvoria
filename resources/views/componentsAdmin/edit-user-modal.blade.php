@@ -17,7 +17,7 @@
             
             <div>
                 <label for="edit-username" class="block text-sm font-medium text-gray-700">Username</label>
-                <input type="text" name="username" id="edit-username" required 
+                <input type="text" name="name" id="edit-username" required 
                     class="mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500"/>
             </div>
 
