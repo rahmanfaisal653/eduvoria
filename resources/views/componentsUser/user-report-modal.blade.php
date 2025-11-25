@@ -8,7 +8,7 @@
         </div>
 
         {{-- Form --}}
-        <form action="{{ route('user.report.store') }}" method="POST" class="p-6 space-y-4">
+        <form action="{{ route('user.report.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
             @csrf
             
             {{-- 1. CONTENT_SUMMARY (Target Laporan) --}}
@@ -41,6 +41,13 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Detail Tambahan (Opsional)</label>
                 <textarea name="description" rows="3" class="w-full rounded-lg border-gray-300 focus:ring-red-500 focus:border-red-500 p-2.5" placeholder="Ceritakan lebih detail..."></textarea>
+            </div>
+
+            {{-- 4. Foto (Optional) --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Lampirkan Foto (Opsional)</label>
+                <input type="file" name="foto" id="report-foto" accept="image/*" 
+                       class="w-full rounded-lg border border-gray-300 p-2.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"/>
             </div>
 
             {{-- Tombol --}}

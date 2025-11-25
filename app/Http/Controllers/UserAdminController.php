@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserAdmin;
+use App\Models\User;
 
 class UserAdminController extends Controller
 {
     public function usersindex()
     {
-        // PERBAIKAN 1: Samakan nama variabel ($users) dengan compact
-        $users = UserAdmin::all();
+        $users = User::all();
         return view('admin.users', compact('users'));
     }
 
@@ -21,9 +20,9 @@ class UserAdminController extends Controller
 
     public function store(Request $request) 
     {
-        UserAdmin::create([
+        User::create([
             'email' => $request->email,       
-            'username' => $request->username,
+            'name' => $request->name,
             'password' => bcrypt($request->password),
             'status' => $request->status,
         ]);
@@ -33,16 +32,16 @@ class UserAdminController extends Controller
 
     public function edit($id)
     {
-        $users = UserAdmin::findOrFail($id);
+        $users = User::findOrFail($id);
         return view('componentsAdmin.edit-user-modal', compact('users'));
     }
 
     public function update(Request $request, $id)
     {
-        $users = UserAdmin::findOrFail($id);
+        $users = User::findOrFail($id);
         $users->update([
             'email' => $request->email,
-            'username' => $request->username,
+            'name' => $request->name,
             'password' => bcrypt($request->password),
             'status' => $request->status,
         ]);
@@ -52,7 +51,7 @@ class UserAdminController extends Controller
 
     public function destroy($id)
     {
-        $users = UserAdmin::findOrFail($id);
+        $users = User::findOrFail($id);
         $users->delete();
 
         return redirect()->route('admin.users');

@@ -18,6 +18,14 @@ class UserReportController extends Controller
             $pelapor = 'Guest (Pengunjung)'; // Default jika tidak login
         }
 
+        $filePath = null; // Default path
+        if ($request->hasFile('foto')) {
+            // Simpan file ke storage/app/public/reports
+            // 'public' adalah disk name yang harus di-link ke folder public
+            $filePath = $request->file('foto')->store('reports', 'public');
+            // Contoh path: 'reports/namafileunik.jpg'
+        }
+
         ReportAdmin::create([
             'type' => $request->type,
             'content_summary' => $request->content_summary,
@@ -25,8 +33,8 @@ class UserReportController extends Controller
             
             // Masukkan variabel pelapor yang sudah kita amankan di atas
             'reported_by' => $pelapor, 
-            
             'priority' => 'Medium',
+            'foto' => $filePath,
         ]);
 
         return redirect()->back()->with('success', 'Laporan terkirim!');

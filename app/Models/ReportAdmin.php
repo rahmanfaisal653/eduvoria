@@ -16,5 +16,6 @@ class ReportAdmin extends Model
         'description',
         'priority',
         'content_summary',
+        'foto'
     ];
 }
