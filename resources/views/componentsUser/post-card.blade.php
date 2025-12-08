@@ -52,14 +52,61 @@
     </a>
 
     <div class="mt-4 flex justify-between border-t border-gray-100 pt-3 text-sm text-gray-500">
-        <div class="flex space-x-4">
-            <span class="cursor-pointer hover:text-red-500">❤ {{ $post->likes_count }} Suka</span>
-            <span class="cursor-pointer hover:text-blue-500" onclick="toggleReplyForm('reply-form-{{ $post->id }}')">
-                💬 {{ $post->replies->count() }} Balasan
+        <div class="flex space-x-4 items-center">
+            <span class="flex items-center space-x-1">
+                <span>❤</span>
+                <span>{{ $post->likes_count }} Suka</span>
             </span>
-            <span class="hover:text-teal-500">👁 {{ $post->views ?? 0 }} Views</span>
+            <span class="cursor-pointer hover:text-blue-500 flex items-center space-x-1" onclick="toggleReplyForm('reply-form-{{ $post->id }}')">
+                <span>💬</span>
+                <span>{{ $post->replies->count() }} Balasan</span>
+            </span>
+            <span class="flex items-center space-x-1">
+                <span>👁</span>
+                <span>{{ $post->views ?? 0 }} Views</span>
+            </span>
+            <span class="flex items-center space-x-1">
+                <span>🔖</span>
+                <span>{{ $post->bookmarks_count ?? 0 }} Bookmark</span>
+            </span>
         </div>
-        <div class="flex space-x-3">
+        <div class="flex space-x-3 items-center">
+            @auth
+                <!-- Cek apakah sudah di-like -->
+                <?php 
+                    $sudahLike = \App\Models\Like::where('user_id', Auth::id())
+                                                 ->where('post_id', $post->id)
+                                                 ->exists();
+                ?>
+                
+                <!-- Tombol Toggle Like dengan icon SVG -->
+                <form action="{{ route('like.toggle', $post->id) }}" method="POST">
+                    @csrf
+                    @if($sudahLike)
+                        <button type="submit" class="hover:scale-110 transition transform" title="Unlike">
+                            <!-- Icon Heart Filled (Merah) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="#EF4444">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </button>
+                    @else
+                        <button type="submit" class="hover:scale-110 transition transform" title="Like">
+                            <!-- Icon Heart Outline (Kosong) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </button>
+                    @endif
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="hover:scale-110 transition transform" title="Login untuk Like">
+                    <!-- Icon Heart Outline (Kosong) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </a>
+            @endauth
+
             @auth
                 <!-- Cek apakah sudah di-bookmark -->
                 <?php 
@@ -68,21 +115,32 @@
                                                         ->exists();
                 ?>
                 
-                <!-- Tombol Toggle Bookmark -->
+                <!-- Tombol Toggle Bookmark dengan icon SVG -->
                 <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST">
                     @csrf
                     @if($sudahBookmark)
-                        <button type="submit" class="cursor-pointer hover:text-red-600">
-                            ❌ Hapus Bookmark
+                        <button type="submit" class="hover:scale-110 transition transform" title="Hapus dari Bookmark">
+                            <!-- Icon Bookmark Filled (Merah) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="#53decdff">
+                                <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                            </svg>
                         </button>
                     @else
-                        <button type="submit" class="cursor-pointer hover:text-teal-600">
-                            🔖 Bookmark
+                        <button type="submit" class="hover:scale-110 transition transform" title="Tambah ke Bookmark">
+                            <!-- Icon Bookmark Outline (Kosong) -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                                <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                            </svg>
                         </button>
                     @endif
                 </form>
             @else
-                <a href="{{ route('login') }}" class="cursor-pointer hover:text-teal-600">🔖 Bookmark</a>
+                <a href="{{ route('login') }}" class="hover:scale-110 transition transform" title="Login untuk Bookmark">
+                    <!-- Icon Bookmark Outline (Kosong) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                        <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                    </svg>
+                </a>
             @endauth
         </div>
     </div>

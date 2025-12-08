@@ -85,32 +85,85 @@
                     <span class="font-semibold">{{ $post->views }}</span>
                     <span>Views</span>
                 </span>
+                <span class="flex items-center space-x-1">
+                    <span>🔖</span>
+                    <span class="font-semibold">{{ $post->bookmarks_count ?? 0 }}</span>
+                    <span>Bookmark</span>
+                </span>
             </div>
 
-            <!-- Bookmark Button -->
-            <div class="border-t border-gray-100 mt-4 pt-4">
+            <!-- Like & Bookmark Buttons -->
+            <div class="border-t border-gray-100 mt-4 pt-4 flex items-center space-x-3">
                 @auth
                     <?php 
+                        $sudahLike = \App\Models\Like::where('user_id', Auth::id())
+                                                     ->where('post_id', $post->id)
+                                                     ->exists();
                         $sudahBookmark = \App\Models\Bookmark::where('user_id', Auth::id())
                                                             ->where('post_id', $post->id)
                                                             ->exists();
                     ?>
                     
+                    <!-- Like Button -->
+                    <form action="{{ route('like.toggle', $post->id) }}" method="POST">
+                        @csrf
+                        @if($sudahLike)
+                            <button type="submit" class="flex items-center space-x-2 px-4 py-2 bg-red-50 border-2 border-red-500 rounded-lg hover:bg-red-100 transition">
+                                <!-- Icon Heart Filled (Merah) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#EF4444">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                                <span class="font-semibold text-red-600">Disukai</span>
+                            </button>
+                        @else
+                            <button type="submit" class="flex items-center space-x-2 px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition">
+                                <!-- Icon Heart Outline (Kosong) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                                <span class="font-semibold text-gray-700">Suka</span>
+                            </button>
+                        @endif
+                    </form>
+
+                    <!-- Bookmark Button -->
                     <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST">
                         @csrf
                         @if($sudahBookmark)
-                            <button type="submit" class="bg-red-100 text-red-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-200 transition">
-                                ❌ Hapus dari Bookmark
+                            <button type="submit" class="flex items-center space-x-2 px-4 py-2 bg-red-50 border-2 border-red-500 rounded-lg hover:bg-red-100 transition">
+                                <!-- Icon Bookmark Filled (Merah) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#EF4444">
+                                    <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                </svg>
+                                <span class="font-semibold text-red-600">Tersimpan</span>
                             </button>
                         @else
-                            <button type="submit" class="bg-teal-100 text-teal-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-200 transition">
-                                🔖 Tambah ke Bookmark
+                            <button type="submit" class="flex items-center space-x-2 px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition">
+                                <!-- Icon Bookmark Outline (Kosong) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                                    <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                </svg>
+                                <span class="font-semibold text-gray-700">Simpan</span>
                             </button>
                         @endif
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-200 transition">
-                        🔖 Login untuk Bookmark
+                    <!-- Like Button (Guest) -->
+                    <a href="{{ route('login') }}" class="inline-flex items-center space-x-2 px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                        <!-- Icon Heart Outline (Kosong) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span class="font-semibold text-gray-700">Suka</span>
+                    </a>
+                    
+                    <!-- Bookmark Button (Guest) -->
+                    <a href="{{ route('login') }}" class="inline-flex items-center space-x-2 px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                        <!-- Icon Bookmark Outline (Kosong) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                            <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                        </svg>
+                        <span class="font-semibold text-gray-700">Simpan</span>
                     </a>
                 @endauth
             </div>

@@ -14,6 +14,8 @@ class Post extends Model
         'content',
         'image',
         'likes_count',
+        'views',
+        'bookmarks_count',
         'status'
     ];
 
@@ -31,6 +33,10 @@ class Post extends Model
         return $this->hasMany(Bookmark::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
   
     public function replies()
     {
