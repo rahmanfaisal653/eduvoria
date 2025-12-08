@@ -39,9 +39,9 @@ class profileController extends Controller
             'profile_picture' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048'
         ]);
 
-        // Handle profile picture upload
+        
         if ($request->hasFile('profile_picture')) {
-            // Delete old profile picture if exists
+          
             if ($user->profile_picture) {
                 Storage::disk('public')->delete($user->profile_picture);
             }

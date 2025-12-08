@@ -93,27 +93,27 @@ class DatabaseSeeder extends Seeder
         // Create Sample Bookmarks
         Bookmark::create([
             'user_id' => $user1->id,
-            'post_id' => $post3->id  // Faisal bookmark post Siti
+            'post_id' => $post3->id  
         ]);
 
         Bookmark::create([
             'user_id' => $user1->id,
-            'post_id' => $post5->id  // Faisal bookmark post Admin
+            'post_id' => $post5->id  
         ]);
 
         Bookmark::create([
             'user_id' => $user2->id,
-            'post_id' => $post1->id  // Siti bookmark post Faisal
+            'post_id' => $post1->id  
         ]);
 
         Bookmark::create([
             'user_id' => $user3->id,
-            'post_id' => $post2->id  // Budi bookmark post Faisal
+            'post_id' => $post2->id  
         ]);
 
         Bookmark::create([
             'user_id' => $user3->id,
-            'post_id' => $post3->id  // Budi bookmark post Siti
+            'post_id' => $post3->id
         ]);
 
         $this->call(ReportAdminSeeder::class);

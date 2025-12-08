@@ -3,53 +3,44 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Direktif Blade untuk Judul Halaman -->
     <title>@yield('title', 'Eduvoria')</title>
-    <!-- Tailwind CSS CDN (Ganti dengan asset kompilasi di production) -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Memungkinkan halaman lain menambahkan CSS khusus -->
     @stack('styles')
     @stack('scripts')
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    <!-- HEADER/NAVBAR UTAMA -->
+
    <header class="w-full border-b border-gray-100 bg-white shadow-sm">
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-    {{-- Logo --}}
+   
     <div class="flex items-center">
       <a href="{{ route('homepage') }}" class="text-2xl font-extrabold text-teal-600 hover:text-teal-700 transition">Eduvoria</a>
     </div>
 
-    {{-- Navigasi --}}
     <nav class="hidden md:flex space-x-6 text-sm">
       @php
-        // Style dasar & aktif
+ 
         $active = 'font-semibold text-teal-600 border-b-2 border-teal-600 pb-1';
         $base   = 'text-gray-500 hover:text-teal-600 hover:border-b-2 hover:border-teal-600 hover:pb-1 hover:font-semibold';
       @endphp
 
-      {{-- Link Beranda --}}
      <a href="{{ route('homepage') }}"
          class="{{ request()->routeIs('homepage') ? $active : $base }}">
          Beranda
       </a>
 
-      {{-- Link Komunitas --}}
       <a href="{{ route('komunitas.index') }}"
       class="{{ request()->routeIs('komunitas.*') ? $active : $base }}">
        Komunitas
       </a>
 
-      {{-- Link Kalender Acara --}}
        <a href="{{ route('kalender.index') }}"
        class="{{ request()->routeIs('kalender.*') ? $active : $base }}">
        Kalender Acara
        </a>
     </nav>
 
-    {{-- Search Bar --}}
     <div class="relative hidden md:block w-96 ml-12">
       <input
         type="text"
@@ -61,7 +52,6 @@
       </span>
     </div>
 
-    {{-- Subscribe + Profil --}}
     <div class="flex items-center space-x-4">
       <button id="open-subscribe-modal"
         class="bg-cyan-500 text-white py-1.5 px-3 rounded-full text-sm font-semibold hover:bg-cyan-600 transition shadow-md relative z-50">
@@ -131,7 +121,7 @@
 </header>
 
 
-    <!-- KONTEN UTAMA (Tempat halaman lain akan di-inject) -->
+    <!-- KONTEN UTAMA  -->
     <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         @yield('content')
     </main>

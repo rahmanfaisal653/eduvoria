@@ -35,10 +35,11 @@
                     </div>
                     
                     <div class="flex flex-col items-end space-y-1 ml-4">
-                        <form action="{{ route('bookmark.toggle', $bookmark->post->id) }}" method="POST" class="bookmark-form">
+                        <!-- Tombol Hapus Bookmark -->
+                        <form action="{{ route('bookmark.toggle', $bookmark->post->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="text-red-500 hover:text-red-700 text-lg" title="Hapus dari bookmark">
-                                🗑️
+                                🗑️ Hapus
                             </button>
                         </form>
                     </div>

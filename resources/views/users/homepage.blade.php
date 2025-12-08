@@ -3,15 +3,14 @@
 @section('title', 'Beranda')
 
 @section('content')
-    <div class="">
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div class="container mx-auto px-4">
+        <div class="flex gap-8 justify-center">
+  
+            <div class="w-full lg:w-2/3 space-y-6">
+            <h2 class="text-xl font-bold text-gray-800">Umpan Beranda</h2>
 
-            {{-- KOLOM KIRI & TENGAH: Umpan Beranda dan Add Post --}}
-            <div class="lg:col-span-2 space-y-6">
-                <h2 class="text-xl font-bold text-gray-800">Umpan Beranda</h2>
-
-                {{-- CARD INPUT POSTINGAN BARU --}}
-                <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
+    
+            <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
                     <div class="flex items-center space-x-3">
                         <div class="h-10 w-10 rounded-full bg-gray-300 flex-shrink-0"></div>
                         <input
@@ -38,7 +37,7 @@
                     </div>
                 </div>
                 
-                {{-- KOLOM PENCARIAN FEED --}}
+               
                 <div class="relative">
                     <input
                         type="text"
@@ -50,14 +49,14 @@
                     </span>
                 </div>
 
-                {{-- STRUKTUR POSTINGAN DINAMIS --}}
-                @foreach ($posts as $post)
-                    @include('componentsUser.post-card', ['post' => $post])
-                @endforeach
-            </div>
+  
+            @foreach ($posts as $post)
+                @include('componentsUser.post-card', ['post' => $post])
+            @endforeach
+        </div>
 
-            {{-- KOLOM KANAN: SIDEBAR --}}
-            <aside class="space-y-6">
+          
+            <aside class="hidden lg:block w-1/3 space-y-6 sticky top-20 self-start">
                 <div class="rounded-xl bg-white p-5 shadow-lg">
                     <h3 class="mb-4 text-lg font-bold text-gray-800">Postingan Trending</h3>
                     <div class="space-y-4">

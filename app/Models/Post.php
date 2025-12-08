@@ -17,15 +17,23 @@ class Post extends Model
         'status'
     ];
 
-    // Relationship: Post belongs to User
+    protected $guarded = [];
+
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relationship: Post has many Bookmarks
+
     public function bookmarks()
     {
         return $this->hasMany(Bookmark::class);
+    }
+
+  
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
     }
 }

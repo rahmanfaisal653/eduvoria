@@ -63,7 +63,7 @@
     </div>
 </div>
 
-{{-- POSTINGAN --}}
+
 <div class="mt-8">
     <!-- Tombol tambah postingan -->
     <div class="flex justify-between items-center mb-4">

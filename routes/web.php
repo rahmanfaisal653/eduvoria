@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController; 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\homepageController;
 use App\Http\Controllers\UserAdminController;
 use App\Http\Controllers\PostAdminController;
@@ -20,16 +20,45 @@ use App\Http\Controllers\profileController;
 use App\Http\Controllers\bookmarkController;
 use App\Http\Controllers\PostController;
 
-// Landing Page
+
 Route::get('/', function () {
     return view('landing');
 })->name('landing');
 
-Route::get('/homepage', [homepageController::class, 'index'])->name('homepage');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'processLogin'])->name('login.submit');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'processRegister'])->name('register.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/homepage', [homepageController::class, 'index'])->name('homepage');
+
+
+    Route::get('/profile', [profileController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit', [profileController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [profileController::class, 'updateProfile'])->name('profile.update');
+
+
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show');
+    Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{id}/update', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{id}/delete', [PostController::class, 'destroy'])->name('posts.destroy');
+
+
+    Route::get('/bookmark', [bookmarkController::class, 'index'])->name('bookmark');
+    Route::post('/bookmark/toggle/{postId}', [bookmarkController::class, 'toggle'])->name('bookmark.toggle');
+
+
+    Route::post('/posts/{postId}/reply', [App\Http\Controllers\ReplyController::class, 'store'])->name('replies.store');
+    Route::delete('/replies/{id}', [App\Http\Controllers\ReplyController::class, 'destroy'])->name('replies.destroy');
+});
 
 // Admin Routes
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
-    
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // ==============================================================
@@ -75,7 +104,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         return view('admin.settings.index');
     })->name('settings');
 
-     Route::get('/komunitas', [AdminCommunityController::class, 'index'])
+    Route::get('/komunitas', [AdminCommunityController::class, 'index'])
         ->name('komunitas.index');
 
     // Detail komunitas
@@ -156,28 +185,3 @@ Route::delete('/komunitas/{communityId}/events/{id}', [CommunityEventController:
 Route::get('/statistik', [StatisticsController::class, 'index'])->name('statistik');
 Route::redirect('/statistic', '/statistik');
 Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
-
-// Auth Routes
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'processLogin'])->name('login.submit');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'processRegister'])->name('register.submit');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Protected Routes (require login)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [profileController::class, 'profile'])->name('profile');
-    Route::get('/profile/edit', [profileController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile/update', [profileController::class, 'updateProfile'])->name('profile.update');
-    
-    // Post Routes
-    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-    Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
-    Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    Route::put('/posts/{id}/update', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{id}/delete', [PostController::class, 'destroy'])->name('posts.destroy');
-    
-    // Bookmark Routes
-    Route::get('/bookmark', [bookmarkController::class, 'index'])->name('bookmark');
-    Route::post('/bookmark/toggle/{postId}', [bookmarkController::class, 'toggle'])->name('bookmark.toggle');
-});
