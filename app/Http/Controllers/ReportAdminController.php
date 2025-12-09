@@ -36,7 +36,6 @@ class ReportAdminController extends Controller
     {
         $filePath = null; 
         if ($request->hasFile('foto')) {
-            // Simpan file ke storage/app/public/reports (disk 'public')
             $filePath = $request->file('foto')->store('reports', 'public');
         }
 

@@ -29,7 +29,7 @@
                 {{-- 2. INPUT GAMBAR (BARU: Ditambahkan untuk upload file) --}}
                 <div>
                     <label for="add-image" class="block text-sm font-semibold text-gray-800 mb-1">Unggah Gambar (Opsional)</label>
-                    <input type="file" name="image" id="add-image" accept="image/*"
+                    <input type="file" name="image" id="add-image" accept=".png, .jpeg, .jpeg"
                         class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-teal-500 focus:ring-teal-500">
                 </div>
                 

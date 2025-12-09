@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class ReportAdmin extends Model
 {
     use HasFactory;
-    protected $table = 'report_admin';
-    protected $primaryKey = 'id';
+    protected $table = 'report';
+    protected $primaryKey = 'id_report';
     protected $fillable = [
         'type',
         'reported_by',

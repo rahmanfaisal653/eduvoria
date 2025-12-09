@@ -9,8 +9,8 @@ class Subscribe extends Model
 {
     use HasFactory;
 
-    protected $table = 'subscribe_admin';
-    protected $primaryKey = 'id';
+    protected $table = 'subscribe';
+    protected $primaryKey = 'id_subscribe';
     protected $fillable = [
         'username',
         'start_date',

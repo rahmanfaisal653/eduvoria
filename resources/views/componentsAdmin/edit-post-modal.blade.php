@@ -40,9 +40,8 @@
                 {{-- 3. INPUT GAMBAR BARU (Opsional) --}}
                 <div>
                     <label for="edit-image" class="block text-sm font-semibold text-gray-800 mb-1">Ganti Gambar (Opsional)</label>
-                    <input type="file" name="image" id="edit-image" accept="image/*"
+                    <input type="file" name="image" id="edit-image" accept=".png, .jpeg, .jpeg"
                         class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-teal-500 focus:ring-teal-500">
-                    {{-- Field 'image' harus disiapkan karena ada di Controller Update Anda --}}
                 </div>
 
                 {{-- 4. INPUT STATUS --}}
@@ -108,7 +107,6 @@
                 if(inputUserId) inputUserId.value = userId;       // Mengisi ID Hidden
                 if(inputStatus) inputStatus.value = status;
 
-                // C. UBAH URL ACTION FORM
                 // Format: /admin/content/update/{id}
                 if(editForm) {
                     editForm.action = `/admin/content/update/${id}`;

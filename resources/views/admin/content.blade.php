@@ -67,7 +67,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{-- Cek apakah post memiliki gambar (image) --}}
                             @if ($post->image)
-                                <a href="{{ asset('storage/' . $post->image) }}" target="_blank" title="Lihat Gambar Penuh">
+                                <a href="{{ asset('storage/' . $post->image) }}" target="_blank" >
                                     <img src="{{ asset('storage/' . $post->image) }}" 
                                          alt="Foto Konten #{{ $post->id }}" 
                                          class="h-10 w-10 object-cover rounded-md shadow-sm">
@@ -100,8 +100,8 @@
                         class="edit-post-btn text-blue-600 hover:text-blue-900" 
                         data-id="{{ $post->id }}"
                         data-content="{{ $post->content }}"
-                        data-user-id="{{ $post->user_id }}" {{-- Mengirim ID Penulis --}}
-                        data-user-name="{{ $post->user->name }}" {{-- Mengirim Nama Penulis --}}
+                        data-user-id="{{ $post->user_id }}" 
+                        data-user-name="{{ $post->user->name }}" 
                         data-status="{{ $post->status }}">
                         Edit
                         </a>

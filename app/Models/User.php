@@ -27,7 +27,9 @@ class User extends Authenticatable
         'role',
         'followers_count',
         'following_count',
-        'status'
+        'status',
+        'id_subscribe',
+        'id_report'
     ];
 
     /**

@@ -46,7 +46,7 @@
             {{-- 4. Foto (Optional) --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lampirkan Foto (Opsional)</label>
-                <input type="file" name="foto" id="report-foto" accept="image/*" 
+                <input type="file" name="foto" id="report-foto" accept=".png, .jpeg, .jpeg"
                        class="w-full rounded-lg border border-gray-300 p-2.5 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"/>
             </div>
 

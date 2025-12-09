@@ -58,13 +58,12 @@
 
                         {{-- 3. TARGET (Kita ambil dari content_summary) --}}
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ Str::limit($report->content_summary, 30) }}
+                            {{ Str::limit($report->content_summary, 20) }}
                             <div class="text-xs text-gray-400 mt-1">Oleh: {{ $report->reported_by }}</div>
                         </td>
 
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if ($report->foto)
-                                {{-- Menggunakan asset() untuk mengakses symlink public/storage --}}
                                 <a href="{{ asset('storage/' . $report->foto) }}" target="_blank">
                                     <img src="{{ asset('storage/' . $report->foto) }}" 
                                         alt="Foto Laporan" 

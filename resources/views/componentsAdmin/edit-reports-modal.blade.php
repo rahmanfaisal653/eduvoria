@@ -44,7 +44,7 @@
                 {{-- 3. Edit Foto (BARU) --}}
                 <div>
                     <label for="edit-report-foto" class="block text-sm font-bold text-gray-800 mb-2">Ganti Foto Lampiran</label>
-                    <input type="file" name="foto" id="edit-report-foto" accept="image/*" 
+                    <input type="file" name="foto" id="edit-report-foto" accept=".png, .jpeg, .jpeg"
                            class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:ring-teal-500 focus:border-teal-500 shadow-sm transition file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:file:text-teal-700"/>
                 </div>
 

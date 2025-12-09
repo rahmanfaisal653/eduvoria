@@ -75,7 +75,8 @@
                             class="edit-user-btn text-teal-600 hover:text-teal-900" 
                             data-id="{{ $user->id }}" 
                             data-email="{{ $user->email }}" 
-                            data-username="{{ $user->username }}">
+                            data-username="{{ $user->name }}"
+                            data-status="{{ $user->status}}">
                             Edit
                             </a>
                         </td>
