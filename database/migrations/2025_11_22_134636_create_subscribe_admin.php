@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscribe', function (Blueprint $table) {
+        Schema::create('subscribes', function (Blueprint $table) {
             $table->id('id_subscribe');
             $table->string('username');
             $table->date('start_date');

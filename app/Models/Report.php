@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ReportAdmin extends Model
 {
     use HasFactory;
-    protected $table = 'report';
+    protected $table = 'reports';
     protected $primaryKey = 'id_report';
     protected $fillable = [
         'type',

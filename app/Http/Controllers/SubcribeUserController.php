@@ -13,7 +13,7 @@ class SubcribeUserController extends Controller
         // 1. Definisikan Variabel yang Dibutuhkan
         $user = Auth::user(); 
         $startDate = now();
-        $endDate = now()->addDays(30); // Contoh: Langganan 30 hari
+        $endDate = now()->addDays(30); 
 
         // 2. Simpan Langganan Baru ke Database
         // Menggunakan data yang Anda berikan
