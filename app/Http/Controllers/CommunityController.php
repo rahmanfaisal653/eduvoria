@@ -3,142 +3,206 @@
 namespace App\Http\Controllers;
 
 use App\Models\Community;
+use App\Models\CommunityMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Models\CommunityPost;
-use App\Models\CommunityEvent;
 
 class CommunityController extends Controller
 {
-   
-    public function index()
+    public function __construct()
     {
-        $communities = Community::orderBy('id', 'DESC')->get();
-
-        $suggestedGroups = [];
-        $upcomingEvents  = [];
-
-        return view('users.komunitas.komunitas', compact(
-            'communities',
-            'suggestedGroups',
-            'upcomingEvents'
-        ));
+        // index & show boleh guest, lainnya wajib login
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
+    // LIST SEMUA KOMUNITAS
+    public function index()
+    {
+        $communities = Community::latest()->paginate(10);
+
+        return view('users.komunitas.komunitas', compact('communities'));
+    }
+
+    // FORM BUAT KOMUNITAS
     public function create()
     {
+        $user = auth()->user();
+
+        if (!$user->isAdmin() && !$user->isSubscribed()) {
+            return redirect()->route('komunitas.index')
+                ->with('error', 'Kamu harus berlangganan terlebih dahulu untuk membuat komunitas.');
+        }
+
         return view('users.komunitas.create');
     }
 
+    // SIMPAN KOMUNITAS BARU
     public function store(Request $request)
     {
+        $user = auth()->user();
+
+        if (!$user->isAdmin() && !$user->isSubscribed()) {
+            return redirect()->route('komunitas.index')
+                ->with('error', 'Kamu harus berlangganan terlebih dahulu untuk membuat komunitas.');
+        }
+
         $data = $request->validate([
-            'name'              => 'required',
-            'description'       => 'nullable',
-            'category'          => 'nullable',
-            'profile_image'     => 'nullable|image|mimes:jpg,jpeg,png',
-            'background_image'  => 'nullable|image|mimes:jpg,jpeg,png',
+            'name'             => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'category'         => 'nullable|string|max:255',
+            'profile_image'    => 'nullable|image|mimes:jpg,jpeg,png',
+            'background_image' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
 
-       
-        $uploadPath = public_path('uploads/komunitas');
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
+        $data['slug']           = Str::slug($data['name']);
+        $data['owner_id']       = $user->id;    // user pembuat komunitas
+        $data['members_count']  = 1;
 
-        
+        // upload memakai storage link
         if ($request->hasFile('profile_image')) {
-            $profileName = time().'_'.$request->profile_image->getClientOriginalName();
-            $request->profile_image->move($uploadPath, $profileName);
-            $data['profile_image'] = $profileName;
+            $filename = time() . '_' . $request->file('profile_image')->getClientOriginalName();
+            $request->file('profile_image')->storeAs('komunitas', $filename, 'public');
+            $data['profile_image'] = $filename;
         }
 
-       
         if ($request->hasFile('background_image')) {
-            $bgName = time().'_'.$request->background_image->getClientOriginalName();
-            $request->background_image->move($uploadPath, $bgName);
-            $data['background_image'] = $bgName;
+            $filename = time() . '_' . $request->file('background_image')->getClientOriginalName();
+            $request->file('background_image')->storeAs('komunitas', $filename, 'public');
+            $data['background_image'] = $filename;
         }
 
-       
-        $data['slug'] = Str::slug($data['name']);
-        $data['owner_id'] = 1;        
-        $data['members_count'] = 1;
+        $community = Community::create($data);
 
-        Community::create($data);
+        // otomatis masukkan pembuat komunitas sebagai member
+        CommunityMember::create([
+            'community_id' => $community->id,
+            'user_id'      => $user->id
+        ]);
 
-        return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil dibuat.');
+        return redirect()->route('komunitas.show', $community->id)
+            ->with('success', 'Komunitas berhasil dibuat!');
     }
 
-public function show($id)
-{
-    $community = Community::findOrFail($id);
+    // DETAIL KOMUNITAS
+    public function show($id)
+    {
+        $community = Community::findOrFail($id);
 
-    $posts = CommunityPost::where('community_id', $community->id)
-                ->orderBy('created_at', 'desc')
-                ->get();
+        $posts = $community->posts()->latest()->get();
+        $events = $community->events()->orderBy('event_date')->get();
 
-    $events = CommunityEvent::where('community_id', $community->id)
-                ->orderBy('event_date', 'asc')
-                ->orderBy('start_time', 'asc')
-                ->get();
+        $user = auth()->user(); // boleh null (guest)
 
-    return view('users.komunitas.komunitasdiskusi', compact('community', 'posts', 'events'));
-}
+        // ============================
+        // CEK APAKAH USER MEMBER
+        // ============================
+        $isMember = false;
+        $isOwner  = false;
+        $owner = $community->owner; 
 
-    
+    if ($user) {
+    $isOwner  = ($community->owner_id === $user->id);
+
+    $isMember = $isOwner || CommunityMember::where('community_id', $community->id)
+                                           ->where('user_id', $user->id)
+                                           ->exists();
+    }
+
+        // ============================
+        // AKSES KELOLA HANYA UNTUK OWNER + ADMIN
+        // ============================
+        $bolehKelola = false;
+
+        if ($user) {
+            $bolehKelola =
+                ($user->role === 'admin') ||
+                ($user->isSubscribed() && $community->owner_id === $user->id);
+        }
+
+    return view('users.komunitas.komunitasdiskusi', compact(
+    'community',
+    'posts',
+    'events',
+    'bolehKelola',
+    'isMember',
+    'isOwner',
+    'owner'   
+       ));
+    }
+
+    // FORM EDIT KOMUNITAS
     public function edit($id)
     {
         $community = Community::findOrFail($id);
+        $user      = auth()->user();
+
+        if (
+            !$user->isAdmin()
+            && !($user->isSubscribed() && $community->owner_id === $user->id)
+        ) {
+            abort(403, 'Kamu tidak punya akses untuk mengedit komunitas ini.');
+        }
 
         return view('users.komunitas.edit', compact('community'));
     }
 
+    // UPDATE KOMUNITAS
     public function update(Request $request, $id)
     {
         $community = Community::findOrFail($id);
+        $user      = auth()->user();
+
+        if (
+            !$user->isAdmin()
+            && !($user->isSubscribed() && $community->owner_id === $user->id)
+        ) {
+            abort(403, 'Kamu tidak punya akses untuk mengupdate komunitas ini.');
+        }
 
         $data = $request->validate([
-            'name'              => 'required',
-            'description'       => 'nullable',
-            'category'          => 'nullable',
-            'profile_image'     => 'nullable|image|mimes:jpg,jpeg,png',
-            'background_image'  => 'nullable|image|mimes:jpg,jpeg,png',
+            'name'             => 'required|string|max:255',
+            'description'      => 'nullable|string',
+            'category'         => 'nullable|string|max:255',
+            'profile_image'    => 'nullable|image|mimes:jpg,jpeg,png',
+            'background_image' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
-
-        $uploadPath = public_path('uploads/komunitas');
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-
-        
-        if ($request->hasFile('profile_image')) {
-            $profile = time().'_'.$request->profile_image->getClientOriginalName();
-            $request->profile_image->move($uploadPath, $profile);
-            $data['profile_image'] = $profile;
-        }
-
-        if ($request->hasFile('background_image')) {
-            $bg = time().'_'.$request->background_image->getClientOriginalName();
-            $request->background_image->move($uploadPath, $bg);
-            $data['background_image'] = $bg;
-        }
 
         $data['slug'] = Str::slug($data['name']);
 
+        if ($request->hasFile('profile_image')) {
+            $filename = time() . '_' . $request->file('profile_image')->getClientOriginalName();
+            $request->file('profile_image')->storeAs('komunitas', $filename, 'public');
+            $data['profile_image'] = $filename;
+        }
+
+        if ($request->hasFile('background_image')) {
+            $filename = time() . '_' . $request->file('background_image')->getClientOriginalName();
+            $request->file('background_image')->storeAs('komunitas', $filename, 'public');
+            $data['background_image'] = $filename;
+        }
+
         $community->update($data);
 
-        return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil diperbarui.');
+        return redirect()->route('komunitas.show', $community->id)
+            ->with('success', 'Komunitas berhasil diperbarui.');
     }
 
-
+    // HAPUS KOMUNITAS
     public function destroy($id)
     {
         $community = Community::findOrFail($id);
+        $user      = auth()->user();
+
+        if (
+            !$user->isAdmin()
+            && !($user->isSubscribed() && $community->owner_id === $user->id)
+        ) {
+            abort(403, 'Kamu tidak punya akses untuk menghapus komunitas ini.');
+        }
 
         $community->delete();
 
-        return redirect()->route('komunitas.index')->with('success', 'Komunitas berhasil dihapus.');
+        return redirect()->route('komunitas.index')
+            ->with('success', 'Komunitas berhasil dihapus.');
     }
-
 }

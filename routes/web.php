@@ -18,7 +18,9 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\profileController;
 use App\Http\Controllers\bookmarkController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommunityMemberController;
 
 
 Route::get('/', function () {
@@ -58,7 +60,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Admin Routes
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::group([
+    'prefix' => 'admin',
+    'as' => 'admin.',
+    'middleware' => ['auth'], // <-- DITAMBAH: admin area wajib login
+], function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
@@ -125,6 +131,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         ->name('komunitas.destroy');
 
 });
+
 Route::post('/subscribe/store', [SubcribeUserController::class, 'store'])->name('user.subscribe.store');
 
 Route::post('/report/submit', [UserReportController::class, 'store'])->name('user.report.store');
@@ -132,57 +139,130 @@ Route::post('/report/submit', [UserReportController::class, 'store'])->name('use
 Route::get('/komunitas', [CommunityController::class, 'index'])->name('komunitas.index');
 
 // FORM BUAT KOMUNITAS
-Route::get('/komunitas/create', [CommunityController::class, 'create'])->name('komunitas.create');
+Route::get('/komunitas/create', [CommunityController::class, 'create'])
+    ->name('komunitas.create')
+    ->middleware('auth'); // <-- bikin komunitas wajib login
 
 // SIMPAN KOMUNITAS
-Route::post('/komunitas', [CommunityController::class, 'store'])->name('komunitas.store');
+Route::post('/komunitas', [CommunityController::class, 'store'])
+    ->name('komunitas.store')
+    ->middleware('auth'); // <-- simpan komunitas wajib login
 
+   // ====== KOMUNITAS: JOIN & LEAVE ======
+Route::post('/komunitas/{id}/join', [CommunityMemberController::class, 'join'])
+    ->name('community.join')
+    ->middleware('auth');
+
+Route::post('/komunitas/{id}/leave', [CommunityMemberController::class, 'leave'])
+    ->name('community.leave')
+    ->middleware('auth');
+    
 // HALAMAN DETAIL KOMUNITAS (komunitasdiskusi.blade.php)
 Route::get('/komunitas/{id}', [CommunityController::class, 'show'])->name('komunitas.show');
 
 // FORM EDIT KOMUNITAS
-Route::get('/komunitas/{id}/edit', [CommunityController::class, 'edit'])->name('komunitas.edit');
+Route::get('/komunitas/{id}/edit', [CommunityController::class, 'edit'])
+    ->name('komunitas.edit')
+    ->middleware('auth'); // <-- edit komunitas wajib login
 
 // UPDATE KOMUNITAS
-Route::put('/komunitas/{id}', [CommunityController::class, 'update'])->name('komunitas.update');
+Route::put('/komunitas/{id}', [CommunityController::class, 'update'])
+    ->name('komunitas.update')
+    ->middleware('auth'); // <-- update wajib login
 
 // HAPUS KOMUNITAS
-Route::delete('/komunitas/{id}', [CommunityController::class, 'destroy'])->name('komunitas.destroy');
+Route::delete('/komunitas/{id}', [CommunityController::class, 'destroy'])
+    ->name('komunitas.destroy')
+    ->middleware('auth'); // <-- hapus wajib login
 
 Route::post('/komunitas/{communityId}/post', [CommunityPostController::class, 'store'])
-    ->name('community-posts.store');
+    ->name('community-posts.store')
+    ->middleware('auth'); // <-- bikin postingan komunitas wajib login
 
 // EDIT form
 Route::get('/komunitas/{communityId}/post/{id}/edit', [CommunityPostController::class, 'edit'])
-    ->name('community-posts.edit');
+    ->name('community-posts.edit')
+    ->middleware('auth'); // <-- edit post komunitas wajib login
 
 // UPDATE postingan
 Route::put('/komunitas/{communityId}/post/{id}', [CommunityPostController::class, 'update'])
-    ->name('community-posts.update');
+    ->name('community-posts.update')
+    ->middleware('auth'); // <-- update post wajib login
 
 // DELETE postingan
 Route::delete('/komunitas/{communityId}/post/{id}', [CommunityPostController::class, 'destroy'])
-    ->name('community-posts.destroy');
+    ->name('community-posts.destroy')
+    ->middleware('auth'); // <-- hapus post wajib login
 
 Route::get('/kalender-acara', [CommunityEventController::class, 'index'])
-    ->name('kalender.index');
+    ->name('kalender.index')
+    ->middleware('auth'); // <-- kalender acara pribadi wajib login
 
 // Tambah acara dari halaman detail komunitas
 Route::post('/komunitas/{communityId}/events', [CommunityEventController::class, 'store'])
-    ->name('community-events.store');
+    ->name('community-events.store')
+    ->middleware('auth'); // <-- tambah event wajib login
 
 // Edit acara
 Route::get('/komunitas/{communityId}/events/{id}/edit', [CommunityEventController::class, 'edit'])
-    ->name('community-events.edit');
+    ->name('community-events.edit')
+    ->middleware('auth'); // <-- edit event wajib login
 
 // Update acara
 Route::put('/komunitas/{communityId}/events/{id}', [CommunityEventController::class, 'update'])
-    ->name('community-events.update');
+    ->name('community-events.update')
+    ->middleware('auth'); // <-- update event wajib login
 
 // Hapus acara
 Route::delete('/komunitas/{communityId}/events/{id}', [CommunityEventController::class, 'destroy'])
-    ->name('community-events.destroy');
+    ->name('community-events.destroy')
+    ->middleware('auth'); // <-- hapus event wajib login
+
+// ====== EVENT: TAMBAH / HAPUS KE KALENDER PRIBADI (OPT-IN) ======
+Route::post('/komunitas/{communityId}/events/{eventId}/add-to-calendar', [CommunityEventController::class, 'addToCalendar'])
+    ->name('community-events.addToCalendar')
+    ->middleware('auth');
+
+Route::delete('/komunitas/{communityId}/events/{eventId}/remove-from-calendar', [CommunityEventController::class, 'removeFromCalendar'])
+    ->name('community-events.removeFromCalendar')
+    ->middleware('auth');
+
+
+// ====== EVENT: TAMBAH / HAPUS DARI KALENDER PRIBADI ======
+Route::post(
+    '/komunitas/{communityId}/events/{id}/add-to-calendar',
+    [CommunityEventController::class, 'addToCalendar']
+)->name('community-events.add-to-calendar')
+ ->middleware('auth');
+
+Route::delete(
+    '/komunitas/{communityId}/events/{id}/remove-from-calendar',
+    [CommunityEventController::class, 'removeFromCalendar']
+)->name('community-events.remove-from-calendar')
+ ->middleware('auth');
 
 Route::get('/statistik', [StatisticsController::class, 'index'])->name('statistik');
 Route::redirect('/statistic', '/statistik');
-Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
+
+Route::middleware(['auth'])->group(function () {
+
+    // notifikasi
+    Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
+    Route::post('/notifikasi/read-all', [NotificationController::class, 'markAll'])->name('notifikasi.readAll');
+    Route::post('/notifikasi/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifikasi.read');
+
+    // like
+    Route::post('/posts/{post}/like', [PostLikeController::class, 'toggle'])->name('posts.like');
+
+    // comment
+    Route::post('/posts/{post}/comment', [CommentController::class, 'store'])->name('posts.comment');
+
+    // follow
+    Route::post('/users/{user}/follow', [FollowController::class, 'toggle'])->name('users.follow');
+    
+    Route::post('/notifikasi/read-all-ajax', [NotificationController::class, 'markAllAjax'])
+        ->name('notifikasi.readAllAjax');
+
+    Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])
+        ->name('notifikasi.delete');
+});

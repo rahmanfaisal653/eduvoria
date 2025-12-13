@@ -8,6 +8,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+// tambahin import model lain
+use App\Models\Post;
+use App\Models\Bookmark;
+use App\Models\Community;
+use App\Models\CommunityEvent;
+use App\Models\Subscribe;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -63,4 +70,50 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bookmark::class);
     }
+
+    /* ==================== TAMBAHAN ==================== */
+
+    // komunitas yang dia buat (owner)
+    public function ownedCommunities()
+    {
+        return $this->hasMany(Community::class, 'owner_id');
+    }
+
+    // event komunitas yang dia buat (kalau di community_events ada user_id)
+    public function communityEvents()
+    {
+        return $this->hasMany(CommunityEvent::class, 'user_id');
+    }
+
+    // relasi ke subscribe berdasarkan username (name)
+    public function subscribe()
+    {
+        // sesuaikan kalau di tabel subscribes kamu pakai kolom lain
+        return $this->hasOne(Subscribe::class, 'username', 'name');
+    }
+
+    // cek apakah user ini admin
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    // cek apakah user ini sedang aktif subscribe
+    public function isSubscribed(): bool
+    {
+        // pakai scope active() dari model Subscribe (yang tadi kita buat)
+        return Subscribe::active()
+            ->where('username', $this->name)
+            ->exists();
+    }
+
+    public function communityMemberships()
+{
+    return $this->hasMany(CommunityMember::class, 'user_id');
+}
+
+public function isMemberOf($communityId)
+{
+    return $this->communityMemberships()->where('community_id', $communityId)->exists();
+}
 }

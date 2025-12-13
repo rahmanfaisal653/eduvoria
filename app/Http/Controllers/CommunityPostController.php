@@ -4,35 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\CommunityPost;
 use App\Models\Community;
+use App\Models\CommunityMember;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommunityPostController extends Controller
 {
     // SIMPAN POSTINGAN BARU
     public function store(Request $request, $communityId)
     {
+        $user = Auth::user();
+        $community = Community::findOrFail($communityId);
+
+        $isOwner  = ($community->owner_id === $user->id);
+        $isMember = CommunityMember::where('community_id', $community->id)
+                                   ->where('user_id', $user->id)
+                                   ->exists();
+
+        if (!$isOwner && !$isMember) {
+            abort(403, 'Kamu tidak punya akses membuat postingan di komunitas ini.');
+        }
+
         $data = $request->validate([
             'content' => 'required|string',
             'image'   => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
 
-        // pastikan komunitas ada
-        $community = Community::findOrFail($communityId);
-
-        // upload gambar (opsional)
-        $uploadPath = public_path('uploads/postingan_komunitas');
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-
         if ($request->hasFile('image')) {
-            $imageName = time().'_'.$request->image->getClientOriginalName();
-            $request->image->move($uploadPath, $imageName);
-            $data['image'] = $imageName;
+            $filename = time().'_'.$request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('postingan_komunitas', $filename, 'public');
+            $data['image'] = $filename;
         }
 
         $data['community_id'] = $community->id;
-        $data['author_name']  = 'User'; // sementara, kalau belum pakai auth
+        $data['author_name']  = $user->name;   // <— nama pembuat postingan
 
         CommunityPost::create($data);
 
@@ -47,6 +52,16 @@ class CommunityPostController extends Controller
         $community = Community::findOrFail($communityId);
         $post = CommunityPost::where('community_id', $communityId)->findOrFail($id);
 
+        $user = Auth::user();
+
+        $isOwner  = ($community->owner_id === $user->id);
+        $isAdmin  = ($user->role === 'admin');
+        $isAuthor = ($post->author_name === $user->name);
+
+        if (!$isOwner && !$isAdmin && !$isAuthor) {
+            abort(403, 'Kamu tidak punya akses mengedit postingan ini.');
+        }
+
         return view('users.komunitas.edit_post', compact('community', 'post'));
     }
 
@@ -56,20 +71,24 @@ class CommunityPostController extends Controller
         $community = Community::findOrFail($communityId);
         $post = CommunityPost::where('community_id', $communityId)->findOrFail($id);
 
+        $user = Auth::user();
+        $isOwner  = ($community->owner_id === $user->id);
+        $isAdmin  = ($user->role === 'admin');
+        $isAuthor = ($post->author_name === $user->name);
+
+        if (!$isOwner && !$isAdmin && !$isAuthor) {
+            abort(403, 'Kamu tidak punya akses mengupdate postingan ini.');
+        }
+
         $data = $request->validate([
             'content' => 'required|string',
             'image'   => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
 
-        $uploadPath = public_path('uploads/postingan_komunitas');
-        if (!is_dir($uploadPath)) {
-            mkdir($uploadPath, 0777, true);
-        }
-
         if ($request->hasFile('image')) {
-            $imageName = time().'_'.$request->image->getClientOriginalName();
-            $request->image->move($uploadPath, $imageName);
-            $data['image'] = $imageName;
+            $filename = time().'_'.$request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('postingan_komunitas', $filename, 'public');
+            $data['image'] = $filename;
         }
 
         $post->update($data);
@@ -84,6 +103,15 @@ class CommunityPostController extends Controller
     {
         $community = Community::findOrFail($communityId);
         $post = CommunityPost::where('community_id', $communityId)->findOrFail($id);
+
+        $user = Auth::user();
+        $isOwner  = ($community->owner_id === $user->id);
+        $isAdmin  = ($user->role === 'admin');
+        $isAuthor = ($post->author_name === $user->name);
+
+        if (!$isOwner && !$isAdmin && !$isAuthor) {
+            abort(403, 'Kamu tidak punya akses menghapus postingan ini.');
+        }
 
         $post->delete();
 

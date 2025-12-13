@@ -20,4 +20,28 @@ class Community extends Model
         'profile_image',
         'background_image',
     ];
+     public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(CommunityPost::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(CommunityEvent::class);
+    }
+
+    public function members()
+{
+    return $this->hasMany(CommunityMember::class);
+}
+
+public function isMember($userId)
+{
+    return $this->members()->where('user_id', $userId)->exists();
+}
 }

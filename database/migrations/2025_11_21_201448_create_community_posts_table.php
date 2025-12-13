@@ -11,16 +11,13 @@ return new class extends Migration
         Schema::create('community_posts', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('community_id'); // id komunitas
-            $table->string('author_name')->nullable();  // nama penulis (sederhana)
-            $table->text('content');                    // isi postingan
-            $table->string('image')->nullable();        // foto postingan (opsional)
+            $table->unsignedBigInteger('community_id'); 
+            $table->string('author_name')->nullable();  
+            $table->text('content');                    
+            $table->string('image')->nullable();       
 
             $table->timestamps();
 
-            // kalau mau sangat dasar, foreign key boleh tidak dipakai.
-            // Kalau mau pakai:
-            // $table->foreign('community_id')->references('id')->on('communities')->onDelete('cascade');
         });
     }
 
