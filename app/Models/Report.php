@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ReportAdmin extends Model
+class Report extends Model
 {
     use HasFactory;
     protected $table = 'reports';
@@ -18,4 +18,10 @@ class ReportAdmin extends Model
         'content_summary',
         'foto'
     ];
+
+    // Relationship: Report belongs to User
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'reported_by', 'id');
+    }
 }

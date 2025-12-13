@@ -15,6 +15,12 @@ class Subscribe extends Model
         'username',
         'start_date',
         'end_date',
-        'status',
+        'status'
     ];
+
+    // Relationship: Subscribe has many Users
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_subscribe', 'id_subscribe');
+    }
 }

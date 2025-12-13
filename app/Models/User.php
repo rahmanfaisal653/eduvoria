@@ -63,4 +63,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bookmark::class);
     }
+
+    // Relationship: User has many reports
+    public function reports()
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    // Relationship: User has one Subscribe
+    public function subscribe()
+    {
+        return $this->hasOne(Subscribe::class);
+    }
 }
