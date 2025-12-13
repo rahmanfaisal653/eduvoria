@@ -58,12 +58,31 @@
         </div>
 
         <div class="col-span-4">
-          <div class="font-semibold text-slate-900">
-            {{ $community->name }}
+          {{-- ✅ DITAMBAH: foto profil komunitas (storage link) --}}
+          <div class="flex items-center gap-3">
+            @if(!empty($community->profile_image))
+              <img
+                src="{{ asset('storage/komunitas/'.$community->profile_image) }}"
+                alt="Foto {{ $community->name }}"
+                class="h-10 w-10 rounded-full object-cover border border-slate-200 bg-white"
+                onerror="this.onerror=null;this.style.display='none';">
+            @else
+              <div class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-sm font-semibold text-slate-500">
+                {{ strtoupper(substr($community->name, 0, 1)) }}
+              </div>
+            @endif
+
+            <div class="min-w-0">
+              <div class="font-semibold text-slate-900">
+                {{ $community->name }}
+              </div>
+              <div class="text-xs text-slate-500 truncate">
+                {{ $community->description }}
+              </div>
+            </div>
           </div>
-          <div class="text-xs text-slate-500 truncate">
-            {{ $community->description }}
-          </div>
+
+          {{-- (kode lama tetap ada, tidak dihapus) --}}
         </div>
 
         <div class="col-span-2 text-xs text-slate-600">

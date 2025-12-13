@@ -11,6 +11,7 @@ class Subscribe extends Model
 
     protected $table = 'subscribes';
     protected $primaryKey = 'id_subscribe';
+    public $incrementing = true;
     protected $fillable = [
         'username',
         'start_date',
@@ -18,9 +19,11 @@ class Subscribe extends Model
         'status'
     ];
 
-    // Relationship: Subscribe has many Users
-    public function users()
+    public function scopeActive($query)
     {
-        return $this->hasMany(User::class, 'id_subscribe', 'id_subscribe');
+        return $query
+            ->where('status', 'active') 
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now());
     }
 }

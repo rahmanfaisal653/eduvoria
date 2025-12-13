@@ -13,8 +13,16 @@
   <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
    
     @if($community->background_image)
+      @php
+        // ✅ tambahan: prioritas storage link, fallback ke uploads lama
+        $bgStorage = asset('storage/komunitas/'.$community->background_image);
+        $bgUploads = asset('uploads/komunitas/'.$community->background_image);
+      @endphp
+
       <div class="h-40 bg-cover bg-center"
-           style="background-image: url('{{ asset('uploads/komunitas/'.$community->background_image) }}')"></div>
+           style="background-image: url('{{ $bgStorage }}')"
+           onerror="this.onerror=null; this.style.backgroundImage='url({{ $bgUploads }})';">
+      </div>
     @else
       <div class="h-32 bg-slate-100"></div>
     @endif
@@ -22,8 +30,15 @@
     <div class="p-6 space-y-4">
       <div class="flex items-center gap-4 -mt-10">
         @if($community->profile_image)
+          @php
+            // ✅ tambahan: prioritas storage link, fallback ke uploads lama
+            $pfStorage = asset('storage/komunitas/'.$community->profile_image);
+            $pfUploads = asset('uploads/komunitas/'.$community->profile_image);
+          @endphp
+
           <img src="{{ asset('uploads/komunitas/'.$community->profile_image) }}"
-               class="h-16 w-16 rounded-full border-4 border-white object-cover">
+               class="h-16 w-16 rounded-full border-4 border-white object-cover"
+               onerror="this.onerror=null; this.src='{{ $pfStorage }}'; this.onerror=function(){this.onerror=null; this.src='{{ $pfUploads }}';};">
         @else
           <div class="h-16 w-16 rounded-full border-4 border-white bg-slate-100 flex items-center justify-center text-xl text-slate-500">
             {{ strtoupper(substr($community->name,0,1)) }}

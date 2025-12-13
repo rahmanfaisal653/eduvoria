@@ -15,4 +15,9 @@ class CommunityPost extends Model
         'content',
         'image',
     ];
+
+     public function community()
+    {
+        return $this->belongsTo(Community::class);
+    }
 }

@@ -19,4 +19,26 @@ class CommunityEvent extends Model
         'end_time',
         'location',
     ];
+
+    public function community()
+    {
+        return $this->belongsTo(Community::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function creator()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
+public function attendees()
+{
+    return $this->belongsToMany(User::class, 'community_event_user')
+                ->withTimestamps();
+}
+
 }

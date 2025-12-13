@@ -49,6 +49,8 @@
         @foreach($events as $event)
           @php
             $date = \Carbon\Carbon::parse($event->event_date);
+            $community = $event->community ?? null;
+            $isOwner = $community && auth()->check() && $community->owner_id === auth()->id();
           @endphp
 
           <div class="flex gap-4 items-stretch">
@@ -96,6 +98,21 @@
               </div>
 
               <div class="flex flex-col items-end gap-2 text-[11px]">
+                {{-- info komunitas pemilik acara --}}
+                @if($community)
+                  <span class="text-[11px] text-slate-500 mb-1 text-right">
+                    Komunitas:
+                    <span class="font-semibold text-slate-800">
+                      {{ $community->name }}
+                    </span>
+                    @if($isOwner)
+                      <span class="ml-1 inline-flex px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px]">
+                        Admin
+                      </span>
+                    @endif
+                  </span>
+                @endif
+
                 <a href="{{ route('komunitas.show', $event->community_id) }}"
                    class="px-3 py-1 rounded-full border border-emerald-600 text-emerald-700 font-semibold hover:bg-emerald-50">
                   Lihat Komunitas
