@@ -21,6 +21,7 @@ use App\Http\Controllers\bookmarkController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommunityMemberController;
+use App\Http\Controllers\SearchController;
 
 
 Route::get('/', function () {
@@ -36,8 +37,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/homepage', [homepageController::class, 'index'])->name('homepage');
 
+    // Search
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+    // Follow
+    Route::post('/follow/{user}', [FollowController::class, 'toggle'])->name('follow.toggle');
 
     Route::get('/profile', [profileController::class, 'profile'])->name('profile');
+    Route::get('/profile/{id}', [profileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [profileController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [profileController::class, 'updateProfile'])->name('profile.update');
 

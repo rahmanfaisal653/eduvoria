@@ -127,26 +127,28 @@
                     </form>
 
                     <!-- Bookmark Button -->
-                    <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST">
-                        @csrf
-                        @if($sudahBookmark)
-                            <button type="submit" class="flex items-center space-x-2 px-4 py-2 bg-red-50 border-2 border-red-500 rounded-lg hover:bg-red-100 transition">
-                                <!-- Icon Bookmark Filled (Merah) -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#EF4444">
-                                    <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                </svg>
-                                <span class="font-semibold text-red-600">Tersimpan</span>
-                            </button>
-                        @else
-                            <button type="submit" class="flex items-center space-x-2 px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition">
-                                <!-- Icon Bookmark Outline (Kosong) -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
-                                    <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                </svg>
-                                <span class="font-semibold text-gray-700">Simpan</span>
-                            </button>
-                        @endif
-                    </form>
+                    @if($post->user_id != Auth::id())
+                        <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST">
+                            @csrf
+                            @if($sudahBookmark)
+                                <button type="submit" class="flex items-center space-x-2 px-4 py-2 bg-red-50 border-2 border-red-500 rounded-lg hover:bg-red-100 transition">
+                                    <!-- Icon Bookmark Filled (Merah) -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="#EF4444">
+                                        <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                    </svg>
+                                    <span class="font-semibold text-red-600">Tersimpan</span>
+                                </button>
+                            @else
+                                <button type="submit" class="flex items-center space-x-2 px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition">
+                                    <!-- Icon Bookmark Outline (Kosong) -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                                        <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                    </svg>
+                                    <span class="font-semibold text-gray-700">Simpan</span>
+                                </button>
+                            @endif
+                        </form>
+                    @endif
                 @else
                     <!-- Like Button (Guest) -->
                     <a href="{{ route('login') }}" class="inline-flex items-center space-x-2 px-4 py-2 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition">

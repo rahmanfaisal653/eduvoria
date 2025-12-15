@@ -19,9 +19,19 @@ class FollowController extends Controller
             ->exists();
 
         if ($exists) {
+            // Unfollow
             Follow::where('follower_id', $me)->where('following_id', $user->id)->delete();
+            
+            // Update counters
+            User::where('id', $me)->decrement('following_count');
+            User::where('id', $user->id)->decrement('followers_count');
         } else {
+            // Follow
             Follow::create(['follower_id' => $me, 'following_id' => $user->id]);
+            
+            // Update counters
+            User::where('id', $me)->increment('following_count');
+            User::where('id', $user->id)->increment('followers_count');
 
             Notification::create([
                 'user_id' => $user->id,

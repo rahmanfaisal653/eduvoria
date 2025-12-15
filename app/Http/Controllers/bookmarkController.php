@@ -26,6 +26,11 @@ class bookmarkController extends Controller
     {
         $post = Post::findOrFail($postId);
         
+        // Cek apakah user mencoba bookmark postingan sendiri
+        if ($post->user_id == Auth::id()) {
+            return redirect()->back()->with('error', 'Anda tidak dapat bookmark postingan sendiri!');
+        }
+        
         $bookmark = Bookmark::where('user_id', Auth::id())
                            ->where('post_id', $postId)
                            ->first();

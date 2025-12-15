@@ -22,7 +22,7 @@
       @php
  
         $active = 'font-semibold text-teal-600 border-b-2 border-teal-600 pb-1';
-        $base   = 'text-gray-500 hover:text-teal-600 hover:border-b-2 hover:border-teal-600 hover:pb-1 hover:font-semibold';
+        $base   = 'text-gray-500 hover:text-teal-600';
       @endphp
 
      <a href="{{ route('homepage') }}"
@@ -41,16 +41,18 @@
        </a>
     </nav>
 
-    <div class="relative hidden md:block w-96 ml-12">
+    <form action="{{ route('search') }}" method="GET" class="relative hidden md:block w-96 ml-12">
       <input
         type="text"
-        placeholder="Cari kursus, postingan, atau pengguna..."
-        class="w-full rounded-full border border-gray-300 bg-gray-50 py-2 pl-4 pr-10 text-sm focus:border-cyan-500 focus:ring-cyan-500 transition"
+        name="query"
+        placeholder="Cari postingan atau pengguna"
+        class="w-full rounded-full border border-gray-300 bg-gray-50 py-2 pl-4 pr-10 text-sm focus:border-cyan-500 focus:ring-cyan-500"
+        required
       />
-      <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+      <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-teal-600">
         🔍
-      </span>
-    </div>
+      </button>
+    </form>
 
     <div class="flex items-center space-x-4">
       <button id="open-subscribe-modal"

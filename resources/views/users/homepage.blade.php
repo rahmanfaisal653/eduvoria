@@ -10,44 +10,49 @@
             <h2 class="text-xl font-bold text-gray-800">Umpan Beranda</h2>
 
     
-            <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
-                    <div class="flex items-center space-x-3">
-                        <div class="h-10 w-10 rounded-full bg-gray-300 flex-shrink-0"></div>
-                        <input
-                            type="text"
-                            placeholder="Apa yang ada di pikiranmu? Mulai postingan..."
-                            class="w-full py-2 pl-3 text-gray-700 focus:outline-none focus:ring-0 text-sm"
-                        />
-                    </div>
-                    
-                    <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
-                        <div class="flex space-x-4 text-sm text-gray-500">
-                            <button class="flex items-center space-x-1 hover:text-teal-600 transition">
-                                🖼️
-                                <span class="hidden sm:inline">Foto/Video</span>
-                            </button>
-                            <button class="flex items-center space-x-1 hover:text-teal-600 transition">
-                                👥
-                                <span class="hidden sm:inline">Tag Komunitas</span>
-                            </button>
+            <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
+                @csrf
+                <div class="flex items-start space-x-3">
+                    @if(Auth::user()->profile_picture)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" 
+                             alt="{{ Auth::user()->name }}" 
+                             class="h-10 w-10 rounded-full object-cover flex-shrink-0">
+                    @else
+                        <div class="h-10 w-10 rounded-full bg-gray-300 flex-shrink-0 flex items-center justify-center text-white font-semibold">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         </div>
-                        <button class="bg-teal-600 text-white py-1.5 px-4 rounded-lg text-sm font-semibold hover:bg-teal-700 transition shadow-md">
-                            Kirim
-                        </button>
-                    </div>
+                    @endif
+                    <textarea
+                        name="content"
+                        id="content"
+                        rows="3"
+                        placeholder="Apa yang ada di pikiranmu? Mulai postingan..."
+                        class="w-full py-2 pl-3 text-gray-700 focus:outline-none focus:ring-0 text-sm resize-none"
+                        required
+                    ></textarea>
                 </div>
                 
-               
-                <div class="relative">
-                    <input
-                        type="text"
-                        placeholder="Cari Postingan, Pengguna, atau Topik..."
-                        class="w-full rounded-xl border border-gray-300 py-3 pl-5 pr-12 text-gray-700 focus:border-teal-500 focus:ring-teal-500 shadow-sm"
-                    />
-                    <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                        🔍
-                    </span>
+                <!-- Preview Image -->
+                <div id="imagePreview" class="mt-3 hidden">
+                    <img id="previewImg" src="" alt="Preview" class="max-h-64 rounded-lg">
+                    <button type="button" onclick="removeImage()" class="mt-2 text-red-500 text-sm hover:text-red-700">
+                        ✕ Hapus Foto
+                    </button>
                 </div>
+                
+                <div class="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
+                    <div class="flex space-x-4 text-sm text-gray-500">
+                        <label for="image" class="flex items-center space-x-1 hover:text-teal-600 transition cursor-pointer">
+                            <input type="file" id="image" name="image" accept="image/*" class="hidden" onchange="previewImage(event)">
+                            🖼️
+                            <span class="hidden sm:inline">Foto</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="bg-teal-600 text-white py-1.5 px-4 rounded-lg text-sm font-semibold hover:bg-teal-700 transition shadow-md">
+                        Kirim
+                    </button>
+                </div>
+            </form>
 
   
             @foreach ($posts as $post)
@@ -56,7 +61,7 @@
         </div>
 
           
-            <aside class="hidden lg:block w-1/3 space-y-6 sticky top-20 self-start">
+            <aside class="hidden lg:block w-1/3 space-y-6 sticky top-20 self-start max-h-screen overflow-y-auto ml-9">
                 <div class="rounded-xl bg-white p-5 shadow-lg">
                     <h3 class="mb-4 text-lg font-bold text-gray-800">Postingan Trending</h3>
                     <div class="space-y-4">
@@ -132,6 +137,26 @@
 
 @push('scripts')
 <script>
+    // Preview image before upload
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('imagePreview').classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Remove image preview
+    function removeImage() {
+        document.getElementById('image').value = '';
+        document.getElementById('imagePreview').classList.add('hidden');
+        document.getElementById('previewImg').src = '';
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         // --- Elemen Modal Laporan (Diasumsikan ada di app.blade) ---
         const reportModal = document.getElementById('report-modal');

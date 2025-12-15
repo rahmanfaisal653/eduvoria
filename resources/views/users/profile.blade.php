@@ -39,10 +39,25 @@
             </div>
 
             <div class="mt-4 sm:mt-0 flex space-x-2 flex-shrink-0">
-                <a href="{{ route('profile.edit') }}" 
-                   class="border border-gray-300 text-gray-700 py-2 px-4 rounded-full text-sm font-semibold hover:bg-gray-100 transition">
-                    Kelola Profil
-                </a>
+                @if(Auth::id() == $user->id)
+                    <a href="{{ route('profile.edit') }}" 
+                       class="border border-gray-300 text-gray-700 py-2 px-4 rounded-full text-sm font-semibold hover:bg-gray-100 transition">
+                        Kelola Profil
+                    </a>
+                @else
+                    <form action="{{ route('follow.toggle', $user->id) }}" method="POST">
+                        @csrf
+                        @if(Auth::user()->isFollowing($user->id))
+                            <button type="submit" class="bg-gray-300 text-gray-700 py-2 px-6 rounded-full text-sm font-semibold hover:bg-gray-400 transition">
+                                Diikuti ✓
+                            </button>
+                        @else
+                            <button type="submit" class="bg-teal-600 text-white py-2 px-6 rounded-full text-sm font-semibold hover:bg-teal-700 transition">
+                                + Ikuti
+                            </button>
+                        @endif
+                    </form>
+                @endif
             </div>
         </div>
 
@@ -115,14 +130,16 @@
                     <div class="flex space-x-4">
                         <span class="cursor-pointer hover:text-red-500">❤ {{ $post->likes_count }} Suka</span>
                     </div>
-                    <div class="flex space-x-3">
-                        <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST" class="inline bookmark-form">
-                            @csrf
-                            <button type="submit" class="cursor-pointer hover:text-teal-600">
-                                🔖 Bookmark
-                            </button>
-                        </form>
-                    </div>
+                    @if($post->user_id != Auth::id())
+                        <div class="flex space-x-3">
+                            <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST" class="inline bookmark-form">
+                                @csrf
+                                <button type="submit" class="cursor-pointer hover:text-teal-600">
+                                    🔖 Bookmark
+                                </button>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

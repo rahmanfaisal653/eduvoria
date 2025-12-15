@@ -35,7 +35,7 @@ class PostController extends Controller
             'likes_count' => 0
         ]);
 
-        return redirect()->route('profile')->with('success', 'Postingan berhasil dibuat!');
+        return redirect()->route('homepage')->with('success', 'Postingan berhasil dibuat!');
     }
 
     public function edit($id)

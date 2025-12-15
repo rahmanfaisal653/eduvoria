@@ -108,12 +108,38 @@ class User extends Authenticatable
     }
 
     public function communityMemberships()
-{
-    return $this->hasMany(CommunityMember::class, 'user_id');
-}
+    {
+        return $this->hasMany(CommunityMember::class, 'user_id');
+    }
 
-public function isMemberOf($communityId)
-{
-    return $this->communityMemberships()->where('community_id', $communityId)->exists();
-}
+    public function isMemberOf($communityId)
+    {
+        return $this->communityMemberships()->where('community_id', $communityId)->exists();
+    }
+
+    // Relasi untuk followers (yang mengikuti user ini)
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id')
+            ->withTimestamps();
+    }
+
+    // Relasi untuk following (yang diikuti oleh user ini)
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id')
+            ->withTimestamps();
+    }
+
+    // Cek apakah user ini mengikuti user lain
+    public function isFollowing($userId)
+    {
+        return $this->following()->where('following_id', $userId)->exists();
+    }
+
+    // Cek apakah user ini diikuti oleh user lain
+    public function isFollowedBy($userId)
+    {
+        return $this->followers()->where('follower_id', $userId)->exists();
+    }
 }

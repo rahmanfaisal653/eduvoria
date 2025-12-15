@@ -108,32 +108,34 @@
             @endauth
 
             @auth
-                <!-- Cek apakah sudah di-bookmark -->
-                <?php 
-                    $sudahBookmark = \App\Models\Bookmark::where('user_id', Auth::id())
-                                                        ->where('post_id', $post->id)
-                                                        ->exists();
-                ?>
-                
-                <!-- Tombol Toggle Bookmark dengan icon SVG -->
-                <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST">
-                    @csrf
-                    @if($sudahBookmark)
-                        <button type="submit" class="hover:scale-110 transition transform" title="Hapus dari Bookmark">
-                            <!-- Icon Bookmark Filled (Merah) -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="#53decdff">
-                                <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                            </svg>
-                        </button>
-                    @else
-                        <button type="submit" class="hover:scale-110 transition transform" title="Tambah ke Bookmark">
-                            <!-- Icon Bookmark Outline (Kosong) -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
-                                <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                            </svg>
-                        </button>
-                    @endif
-                </form>
+                @if($post->user_id != Auth::id())
+                    <!-- Cek apakah sudah di-bookmark -->
+                    <?php 
+                        $sudahBookmark = \App\Models\Bookmark::where('user_id', Auth::id())
+                                                            ->where('post_id', $post->id)
+                                                            ->exists();
+                    ?>
+                    
+                    <!-- Tombol Toggle Bookmark dengan icon SVG -->
+                    <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST">
+                        @csrf
+                        @if($sudahBookmark)
+                            <button type="submit" class="hover:scale-110 transition transform" title="Hapus dari Bookmark">
+                                <!-- Icon Bookmark Filled (Merah) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="#53decdff">
+                                    <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                </svg>
+                            </button>
+                        @else
+                            <button type="submit" class="hover:scale-110 transition transform" title="Tambah ke Bookmark">
+                                <!-- Icon Bookmark Outline (Kosong) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                                    <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                </svg>
+                            </button>
+                        @endif
+                    </form>
+                @endif
             @else
                 <a href="{{ route('login') }}" class="hover:scale-110 transition transform" title="Login untuk Bookmark">
                     <!-- Icon Bookmark Outline (Kosong) -->

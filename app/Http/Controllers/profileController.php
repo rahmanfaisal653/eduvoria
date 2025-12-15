@@ -22,6 +22,18 @@ class profileController extends Controller
         return view('users.profile', compact('user', 'posts'));
     }
 
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        
+        // Load user posts
+        $posts = Post::where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        return view('users.profile', compact('user', 'posts'));
+    }
+
     public function editProfile()
     {
         $user = Auth::user();
