@@ -79,9 +79,9 @@
             </div>
 
             {{-- CONTENT --}}
-            <div class="flex-1">
+            <a href="{{ route('notifikasi.open', $notif->id) }}" class="flex-1 block">
               <p class="text-sm">
-                <b class="text-slate-900 hover:text-emerald-700 cursor-pointer">
+                <b class="text-slate-900 hover:text-emerald-700">
                   {{ $notif->fromUser->name ?? 'User' }}
                 </b>
 
@@ -91,6 +91,8 @@
                   mengomentari postingan Anda.
                 @elseif($notif->type=='follow')
                   mulai mengikuti Anda.
+                @else
+                  mengirim notifikasi.
                 @endif
               </p>
 
@@ -106,17 +108,27 @@
                   </span>
                 @endif
               </div>
-            </div>
+            </a>
 
             {{-- ACTION --}}
-            @if(!$notif->is_read)
-            <form action="{{ route('notifikasi.read', $notif->id) }}" method="POST">
-              @csrf
-              <button class="btn-markread text-xs text-emerald-700 hover:underline">
-                Tandai dibaca
-              </button>
-            </form>
-            @endif
+            <div class="flex items-center gap-3">
+              @if(!$notif->is_read)
+              <form action="{{ route('notifikasi.read', $notif->id) }}" method="POST">
+                @csrf
+                <button class="btn-markread text-xs text-emerald-700 hover:underline">
+                  Tandai dibaca
+                </button>
+              </form>
+              @endif
+
+              <form action="{{ route('notifikasi.destroy', $notif->id) }}" method="POST" onsubmit="return confirm('Hapus notifikasi ini?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-xs text-slate-500 hover:text-red-600" title="Hapus">
+                  ✕
+                </button>
+              </form>
+            </div>
 
           </div>
         </div>

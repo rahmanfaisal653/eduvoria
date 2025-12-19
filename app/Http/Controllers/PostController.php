@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 
 class PostController extends Controller
 {
@@ -103,9 +104,16 @@ class PostController extends Controller
     public function show($id)
     {
         $post = Post::with('user')->findOrFail($id);
-        
-        // Increment views
-        $post->increment('views');
+
+        // Increment views hanya jika dilihat oleh orang lain
+        if (
+            Auth::check() &&
+            Auth::id() !== $post->user_id &&
+            Schema::hasTable('posts') &&
+            Schema::hasColumn('posts', 'views')
+        ) {
+            $post->increment('views');
+        }
         
         return view('users.postingan.show', compact('post'));
     }

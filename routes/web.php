@@ -255,21 +255,11 @@ Route::middleware(['auth'])->group(function () {
 
     // notifikasi
     Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi');
+    Route::get('/notifikasi/{id}', [NotificationController::class, 'open'])->name('notifikasi.open');
     Route::post('/notifikasi/read-all', [NotificationController::class, 'markAll'])->name('notifikasi.readAll');
     Route::post('/notifikasi/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifikasi.read');
+    Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])->name('notifikasi.destroy');
 
-    // like
-    Route::post('/posts/{post}/like', [PostLikeController::class, 'toggle'])->name('posts.like');
-
-    // comment
-    Route::post('/posts/{post}/comment', [CommentController::class, 'store'])->name('posts.comment');
-
-    // follow
-    Route::post('/users/{user}/follow', [FollowController::class, 'toggle'])->name('users.follow');
-    
     Route::post('/notifikasi/read-all-ajax', [NotificationController::class, 'markAllAjax'])
         ->name('notifikasi.readAllAjax');
-
-    Route::delete('/notifikasi/{id}', [NotificationController::class, 'destroy'])
-        ->name('notifikasi.delete');
 });
