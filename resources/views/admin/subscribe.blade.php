@@ -84,7 +84,7 @@
                                 data-end-date="{{ $report['end_date'] }}"
                                 data-status="{{ $report['status'] }}"
                             >
-                                Lihat Detail
+                                Detail
                             </button>
                         </td>
                     </tr>

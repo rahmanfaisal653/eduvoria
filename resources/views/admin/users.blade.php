@@ -79,6 +79,24 @@
                             data-status="{{ $user->status}}">
                             Edit
                             </a>
+
+                            <a href="#"
+                            class="detail-user-btn inline-flex items-center justify-center
+                            text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs" 
+                            data-id="{{ $user->id }}" 
+                            data-username="{{ $user->name }}"
+                            data-status="{{ $user->status}}"
+                            data-email="{{ $user->email }}"
+                            data-status="{{ $user->status }}"
+                            data-profile-picture="{{ $user->profile_picture }}"
+                            data-bio="{{ $user->bio }}"
+                            data-hobi="{{ $user->hobi }}"
+                            data-role="{{ $user->role }}"
+                            data-followers-count="{{ $user->followers_count }}"
+                            data-following-count="{{ $user->following_count }}"
+                            >
+                            Detail
+                            </a>
                         </td>
                     </tr>
                     @endforeach

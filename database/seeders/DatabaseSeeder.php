@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         // Create Admin User
         $admin = User::create([
             'name' => 'Admin Eduvoria',
-            'email' => 'admin2@eduvoria.com',
+            'email' => 'admin@eduvoria.com',
             'password' => Hash::make('admin123'),
             'role' => 'admin',
             'bio' => 'Administrator platform Eduvoria',
@@ -116,11 +116,8 @@ class DatabaseSeeder extends Seeder
             'post_id' => $post3->id
         ]);
 
-        $this->call(ReportAdminSeeder::class);
-        $this->call(SubscribeSeeder::class);
-
         echo "\n✅ Seeding completed successfully!\n";
-        echo "📧 Admin: admin@eduvoria.com | Password: admin123\n";
+        echo "📧 Admin: admin2@eduvoria.com | Password: admin123\n";
         echo "📧 User 1: faisal@eduvoria.com | Password: password123\n";
         echo "📧 User 2: siti@eduvoria.com | Password: password123\n";
         echo "📧 User 3: budi@eduvoria.com | Password: password123\n";

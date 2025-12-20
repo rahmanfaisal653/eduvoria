@@ -106,6 +106,22 @@
                         Edit
                         </a>
 
+                        <a href="#"
+                        class= "detail-post-btn inline-flex items-center justify-center
+                        text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs"
+                        data-id="{{ $post->id }}"
+                        data-content="{{ $post->content }}"
+                        data-user-id="{{ $post->user_id }}" 
+                        data-user-name="{{ $post->user->name }}"
+                        data-image-url="{{ $post->image ? asset('storage/' . $post->image) : '' }}"
+                        data-status="{{ $post->status }}"
+                        data-likes="{{ $post->likes_count }}"
+                        data-bookmark="{{ $post->bookmarks_count }}"
+                        data-view="{{ $post->views_count }}"
+                        >
+                        Detail
+                        </a>
+
                         {{-- Tombol HAPUS --}}
                         <a href="{{ route('admin.content.delete', $post->id) }}" 
                         class="text-red-600 hover:text-red-900 font-semibold cursor-pointer"

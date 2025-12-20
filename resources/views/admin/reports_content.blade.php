@@ -104,6 +104,18 @@
                                 Edit
                             </button>
 
+                            <a href="#"
+                                class="detail-report-btn inline-flex items-center justify-center
+                                text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs"
+                                data-id="{{ $report->id }}"
+                                data-type="{{ $report->type }}"
+                                data-priority="{{ $report->priority }}"
+                                data-description="{{ $report->description }}"
+                                data-reported-by="{{ $report->reported_by }}"
+                                data-foto="{{ $report->foto ? asset('storage/' . $report->foto) : '' }}">
+                                Detail
+                            </a>
+
                             {{-- 3. TOMBOL HAPUS LANGSUNG (Kode Kamu) --}}
                             <a href="{{ route('admin.reports.delete', $report->id) }}" 
                             onclick="return confirm('Yakin hapus laporan ini?')"
