@@ -101,20 +101,41 @@ class PostController extends Controller
         return redirect()->route('profile')->with('success', 'Postingan berhasil dihapus!');
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $post = Post::with('user')
             ->withCount('replies')
             ->findOrFail($id);
 
-        // Increment views hanya jika dilihat oleh orang lain
+        // Increment views setiap kali postingan dibuka
+        // Hanya jika:
+        // 1. User sudah login
+        // 2. Bukan pemilik postingan
+        // 3. Bukan dari aksi reply (ada session flag dari reply)
+        $skipViewCount = session()->has('skip_view_count_' . $id);
+        
         if (
             Auth::check() &&
             Auth::id() !== $post->user_id &&
+            !$skipViewCount &&
             Schema::hasTable('posts') &&
             Schema::hasColumn('posts', 'views')
         ) {
             $post->increment('views');
+            // Refresh nilai views setelah increment
+            $post->refresh();
+        }
+        
+        // Hapus flag skip view count setelah dicek
+        session()->forget('skip_view_count_' . $id);
+
+        // Jika request dari API (Accept: application/json), return JSON
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diambil',
+                'data' => $post
+            ]);
         }
         
         return view('users.postingan.show', compact('post'));
