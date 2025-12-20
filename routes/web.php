@@ -44,9 +44,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/follow/{user}', [FollowController::class, 'toggle'])->name('follow.toggle');
 
     Route::get('/profile', [profileController::class, 'profile'])->name('profile');
-    Route::get('/profile/{id}', [profileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [profileController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [profileController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/{id}', [profileController::class, 'show'])->name('profile.show');
 
 
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
@@ -105,7 +105,6 @@ Route::group([
 
     Route::post('/reports/content/update/{id}', [ReportAdminController::class, 'update'])->name('reports.update');
     Route::get('/reports/content/delete/{id}', [ReportAdminController::class, 'destroy'])->name('reports.delete');
-
 
     // 5. LAPORAN SUBSCRIBE (Name: admin.subscribe)
     Route::get('/reports/subscribe', [SubcribeAdminController::class, 'reportsSubscribeIndex'])->name('subscribe');

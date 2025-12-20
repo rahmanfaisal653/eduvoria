@@ -2,13 +2,38 @@
     <div class="flex justify-between items-start">
         
         <div class="flex items-center space-x-3">
-            @if($post->user->profile_picture)
-                <img src="{{ asset('storage/' . $post->user->profile_picture) }}" alt="{{ $post->user->name }}" class="h-10 w-10 rounded-full object-cover">
-            @else
-                <img src="https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&background=F28A25&color=fff&size=40" alt="{{ $post->user->name }}" class="h-10 w-10 rounded-full">
-            @endif
+            {{-- Foto Profil (bisa diklik) --}}
+            <a href="{{ route('profile.show', $post->user->id) }}">
+                @if($post->user->profile_picture)
+                    <img src="{{ asset('storage/' . $post->user->profile_picture) }}" alt="{{ $post->user->name }}" class="h-10 w-10 rounded-full object-cover hover:opacity-80 transition">
+                @else
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&background=F28A25&color=fff&size=40" alt="{{ $post->user->name }}" class="h-10 w-10 rounded-full hover:opacity-80 transition">
+                @endif
+            </a>
+            
             <div>
-                <p class="font-semibold text-gray-900">{{ $post->user->name }}</p>
+                {{-- Nama User dan Tombol Follow dalam satu baris --}}
+                <div class="flex items-center space-x-2">
+                    <a href="{{ route('profile.show', $post->user->id) }}" class="font-semibold text-gray-900 hover:text-teal-600 transition">{{ $post->user->name }}</a>
+                    
+                    {{-- Tombol Follow Text Only (hanya tampil jika bukan postingan sendiri) --}}
+                    @auth
+                        @if($post->user_id != Auth::id())
+                            <form action="{{ route('follow.toggle', $post->user->id) }}" method="POST">
+                                @csrf
+                                @if(Auth::user()->isFollowing($post->user->id))
+                                    <button type="submit" class="text-gray-500 text-xs font-medium hover:text-gray-700 hover:underline transition">
+                                        Followed
+                                    </button>
+                                @else
+                                    <button type="submit" class="text-teal-600 text-xs font-medium hover:text-teal-700 hover:underline transition">
+                                        Follow
+                                    </button>
+                                @endif
+                            </form>
+                        @endif
+                    @endauth
+                </div>
                 <p class="text-xs text-gray-500">{{ $post->created_at->diffForHumans() }}</p>
             </div>
         </div>
@@ -55,11 +80,11 @@
         <div class="flex space-x-4 items-center">
             <span class="flex items-center space-x-1">
                 <span>❤</span>
-                <span>{{ $post->likes_count }} Suka</span>
+                <span>{{ $post->likes_count ?? 0 }} Suka</span>
             </span>
             <span class="cursor-pointer hover:text-blue-500 flex items-center space-x-1" onclick="toggleReplyForm('reply-form-{{ $post->id }}')">
                 <span>💬</span>
-                <span>{{ $post->replies->count() }} Balasan</span>
+                <span>{{ $post->replies_count ?? 0 }} Balasan</span>
             </span>
             <span class="flex items-center space-x-1">
                 <span>👁</span>
@@ -120,16 +145,16 @@
                     <form action="{{ route('bookmark.toggle', $post->id) }}" method="POST">
                         @csrf
                         @if($sudahBookmark)
-                            <button type="submit" class="hover:scale-110 transition transform" title="Hapus dari Bookmark">
-                                <!-- Icon Bookmark Filled (Merah) -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="#53decdff">
+                            <button type="submit" class="hover:scale-110 transition transform group" title="Hapus dari Bookmark">
+                                <!-- Icon Bookmark Filled (Teal) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:opacity-80" viewBox="0 0 24 24" fill="#14b8a6">
                                     <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
                                 </svg>
                             </button>
                         @else
-                            <button type="submit" class="hover:scale-110 transition transform" title="Tambah ke Bookmark">
-                                <!-- Icon Bookmark Outline (Kosong) -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                            <button type="submit" class="hover:scale-110 transition transform group" title="Tambah ke Bookmark">
+                                <!-- Icon Bookmark Outline (Kosong dengan hover teal) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:stroke-teal-500" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
                                     <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
                                 </svg>
                             </button>
@@ -137,9 +162,9 @@
                     </form>
                 @endif
             @else
-                <a href="{{ route('login') }}" class="hover:scale-110 transition transform" title="Login untuk Bookmark">
-                    <!-- Icon Bookmark Outline (Kosong) -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
+                <a href="{{ route('login') }}" class="hover:scale-110 transition transform group" title="Login untuk Bookmark">
+                    <!-- Icon Bookmark Outline (Kosong dengan hover teal) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:stroke-teal-500" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2">
                         <path d="M5 5c0-1.1.9-2 2-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
                     </svg>
                 </a>

@@ -7,8 +7,8 @@
     <div class="max-w-3xl mx-auto">
         <!-- Tombol Kembali -->
         <div class="mb-4">
-            <a href="{{ url()->previous() }}" class="text-teal-600 hover:text-teal-700 font-semibold">
-                ← Kembali
+            <a href="{{ route('homepage') }}" class="text-teal-600 hover:text-teal-700 font-semibold">
+                ← Kembali ke Beranda
             </a>
         </div>
 
@@ -17,17 +17,42 @@
             <!-- Header Post -->
             <div class="flex justify-between items-start mb-4">
                 <div class="flex items-center space-x-3">
-                    @if($post->user->profile_picture)
-                        <img src="{{ asset('storage/' . $post->user->profile_picture) }}" 
-                             alt="{{ $post->user->name }}" 
-                             class="h-12 w-12 rounded-full object-cover">
-                    @else
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&background=F28A25&color=fff&size=48" 
-                             alt="{{ $post->user->name }}" 
-                             class="h-12 w-12 rounded-full">
-                    @endif
+                    {{-- Foto Profil (bisa diklik) --}}
+                    <a href="{{ route('profile.show', $post->user->id) }}">
+                        @if($post->user->profile_picture)
+                            <img src="{{ asset('storage/' . $post->user->profile_picture) }}" 
+                                 alt="{{ $post->user->name }}" 
+                                 class="h-12 w-12 rounded-full object-cover hover:opacity-80 transition">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($post->user->name) }}&background=F28A25&color=fff&size=48" 
+                                 alt="{{ $post->user->name }}" 
+                                 class="h-12 w-12 rounded-full hover:opacity-80 transition">
+                        @endif
+                    </a>
+                    
                     <div>
-                        <p class="font-bold text-gray-900 text-lg">{{ $post->user->name }}</p>
+                        {{-- Nama User dan Tombol Follow dalam satu baris --}}
+                        <div class="flex items-center space-x-2">
+                            <a href="{{ route('profile.show', $post->user->id) }}" class="font-bold text-gray-900 text-lg hover:text-teal-600 transition">{{ $post->user->name }}</a>
+                            
+                            {{-- Tombol Follow Text Only --}}
+                            @auth
+                                @if($post->user_id != Auth::id())
+                                    <form action="{{ route('follow.toggle', $post->user->id) }}" method="POST">
+                                        @csrf
+                                        @if(Auth::user()->isFollowing($post->user->id))
+                                            <button type="submit" class="text-gray-500 text-xs font-medium hover:text-gray-700 hover:underline transition">
+                                                Followed
+                                            </button>
+                                        @else
+                                            <button type="submit" class="text-teal-600 text-xs font-medium hover:text-teal-700 hover:underline transition">
+                                                Follow
+                                            </button>
+                                        @endif
+                                    </form>
+                                @endif
+                            @endauth
+                        </div>
                         <p class="text-sm text-gray-500">{{ $post->created_at->format('d M Y, H:i') }}</p>
                     </div>
                 </div>

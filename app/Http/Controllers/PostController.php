@@ -103,7 +103,9 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::with('user')->findOrFail($id);
+        $post = Post::with('user')
+            ->withCount('replies')
+            ->findOrFail($id);
 
         // Increment views hanya jika dilihat oleh orang lain
         if (

@@ -14,8 +14,9 @@ class profileController extends Controller
     {
         $user = Auth::user();
         
-        // Load user posts
+        // Load user posts dengan counter
         $posts = Post::where('user_id', $user->id)
+                    ->withCount('replies')
                     ->orderBy('created_at', 'desc')
                     ->get();
 
@@ -26,8 +27,9 @@ class profileController extends Controller
     {
         $user = User::findOrFail($id);
         
-        // Load user posts
+        // Load user posts dengan counter
         $posts = Post::where('user_id', $user->id)
+                    ->withCount('replies')
                     ->orderBy('created_at', 'desc')
                     ->get();
 

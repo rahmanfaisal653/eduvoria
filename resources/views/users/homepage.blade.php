@@ -66,21 +66,21 @@
                     <h3 class="mb-4 text-lg font-bold text-gray-800">Postingan Trending</h3>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-3">
-                            <div class="h-12 w-12 flex-shrink-0 rounded-md bg-teal-100"></div>
+                            <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=100&h=100&fit=crop" alt="Produktivitas" class="h-12 w-12 flex-shrink-0 rounded-md object-cover">
                             <div>
                                 <p class="text-sm font-semibold text-gray-800 hover:text-teal-600 cursor-pointer">10 Tips Produktif Saat untuk Bekerja dari Rumah</p>
                                 <p class="text-xs text-gray-500">Berita & Sains</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-3">
-                            <div class="h-12 w-12 flex-shrink-0 rounded-md bg-orange-100"></div>
+                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=100&h=100&fit=crop" alt="Bisnis" class="h-12 w-12 flex-shrink-0 rounded-md object-cover">
                             <div>
                                 <p class="text-sm font-semibold text-gray-800 hover:text-teal-600 cursor-pointer">Wawancara Eksklusif dengan CEO Energetic Social</p>
                                 <p class="text-xs text-gray-500">Bisnis & Finansial</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-3">
-                            <div class="h-12 w-12 flex-shrink-0 rounded-md bg-blue-100"></div>
+                            <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=100&h=100&fit=crop" alt="Fotografi" class="h-12 w-12 flex-shrink-0 rounded-md object-cover">
                             <div>
                                 <p class="text-sm font-semibold text-gray-800 hover:text-teal-600 cursor-pointer">Fotografi Potret Abadikan Momen Terbaikmu</p>
                                 <p class="text-xs text-gray-500">Fotografi</p>
@@ -93,14 +93,14 @@
                     <h3 class="mb-4 text-lg font-bold text-gray-800">Apa yang Baru</h3>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-3">
-                            <div class="h-12 w-12 flex-shrink-0 rounded-md bg-gray-200"></div>
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop" alt="Stories" class="h-12 w-12 flex-shrink-0 rounded-md object-cover">
                             <div>
                                 <p class="text-sm font-semibold text-gray-800">Fitur 'Cerita Telah Hadir'</p>
                                 <p class="text-xs text-gray-500">Bagikan momen singkat dan interaktif dengan teman-teman Anda.</p>
                             </div>
                         </div>
                         <div class="flex items-start space-x-3">
-                            <div class="h-12 w-12 flex-shrink-0 rounded-md bg-gray-200"></div>
+                            <img src="https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=100&h=100&fit=crop" alt="Search" class="h-12 w-12 flex-shrink-0 rounded-md object-cover">
                             <div>
                                 <p class="text-sm font-semibold text-gray-800">Peningkatan Filter Pencarian</p>
                                 <p class="text-xs text-gray-500">Temukan apa yang kamu cari dengan cepat dari menu baru kami.</p>
