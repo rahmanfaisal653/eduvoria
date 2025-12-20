@@ -105,8 +105,7 @@
                             </button>
 
                             <a href="#"
-                                class="detail-report-btn inline-flex items-center justify-center
-                                text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs"
+                                class="detail-report-btn text-cyan-600 hover:text-cyan-900"
                                 data-id="{{ $report->id_report }}"
                                 data-type="{{ $report->type }}"
                                 data-priority="{{ $report->priority }}"
@@ -138,6 +137,7 @@
 
     {{-- MODAL AKSI PELANGGARAN (Review/Tindak) akan diletakkan di sini --}}
     @include('componentsAdmin.edit-reports-modal')
+    @include('componentsAdmin.detail-reports-modal')
 
 @endsection
 

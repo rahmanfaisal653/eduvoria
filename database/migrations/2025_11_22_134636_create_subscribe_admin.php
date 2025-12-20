@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('username');
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('status')->default('active');
+            $table->enum('status', ['paid', 'pending', 'Failed', 'Cancelled'])->default('pending');
+            $table->decimal('price', 10, 2)->default(59000);
             $table->timestamps();
         });
     }

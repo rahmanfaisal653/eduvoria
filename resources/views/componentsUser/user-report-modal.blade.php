@@ -14,11 +14,7 @@
             {{-- 1. CONTENT_SUMMARY (Target Laporan) --}}
             {{-- Ini akan mengisi kolom 'Target' di tabel admin --}}
             <input type="hidden" name="content_summary" id="report-content-summary">
-
-            {{-- Preview Visual (Biar user tau apa yg dilaporin) --}}
-            <div class="bg-gray-50 p-3 rounded-lg border text-sm text-gray-600 mb-2">
-                Melaporkan: <span id="preview-summary" class="font-bold text-gray-800">...</span>
-            </div>
+            
 
             {{-- 2. TYPE (Jenis Pelanggaran) --}}
             {{-- Ini akan mengisi kolom 'Tipe Pelanggaran' di tabel admin --}}
@@ -65,16 +61,15 @@
 
 {{-- Script Pendukung (Simpan di bawah html modal ini) --}}
 <script>
-    function openUserReportModal(summaryContent) {
-        // Isi input hidden agar masuk ke database
-        document.getElementById('report-content-summary').value = summaryContent;
-        // Tampilkan teks preview
-        document.getElementById('preview-summary').textContent = summaryContent;
-        // Buka modal
-        document.getElementById('user-report-modal').classList.remove('hidden');
-    }
+function openUserReportModal(summaryContent) {
+    // Tetap isi hidden input (INI YANG PENTING)
+    document.getElementById('report-content-summary').value = summaryContent;
 
-    function closeUserReportModal() {
-        document.getElementById('user-report-modal').classList.add('hidden');
-    }
+    // Buka modal
+    document.getElementById('user-report-modal').classList.remove('hidden');
+}
+
+function closeUserReportModal() {
+    document.getElementById('user-report-modal').classList.add('hidden');
+}
 </script>

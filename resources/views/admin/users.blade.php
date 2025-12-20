@@ -70,7 +70,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                             {{-- Tombol Edit --}}
                             <a href="#" 
-                            class="edit-user-btn text-teal-600 hover:text-teal-900" 
+                            class="edit-user-btn text-blue-600 hover:text-blue-900" 
                             data-id="{{ $user->id }}" 
                             data-email="{{ $user->email }}" 
                             data-username="{{ $user->name }}"
@@ -79,20 +79,16 @@
                             </a>
 
                             <a href="#"
-                            class="detail-user-btn inline-flex items-center justify-center
-                            text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs" 
-                            data-id="{{ $user->id }}" 
+                            class="detail-user-btn text-cyan-600 hover:text-cyan-900"
+                            data-id="{{ $user->id }}"
                             data-username="{{ $user->name }}"
-                            data-status="{{ $user->status}}"
                             data-email="{{ $user->email }}"
                             data-status="{{ $user->status }}"
-                            data-profile-picture="{{ $user->profile_picture }}"
                             data-bio="{{ $user->bio }}"
                             data-hobi="{{ $user->hobi }}"
                             data-role="{{ $user->role }}"
-                            data-followers-count="{{ $user->followers_count }}"
-                            data-following-count="{{ $user->following_count }}"
-                            >
+                            data-followers="{{ $user->followers_count }}"
+                            data-following="{{ $user->following_count }}">
                             Detail
                             </a>
                         </td>
@@ -111,6 +107,9 @@
 
     {{-- MODAL BLOKIR PENGGUNA --}}
     @include('componentsAdmin.block-user-modal')
+
+    {{-- MODAL DETAIL PENGGUNA --}}
+    @include('componentsAdmin.detail-user-modal')
 @endsection
 
 

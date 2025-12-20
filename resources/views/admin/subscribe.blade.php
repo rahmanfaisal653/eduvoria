@@ -13,26 +13,31 @@
             
             <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-teal-500">
                 <p class="text-sm font-medium text-gray-500">Revenue Bulan Ini</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">Rp 12.5 Jt</p>
-                <p class="text-sm text-green-600 mt-2">▲ 7% dari Bulan Lalu</p>
-            </div>
 
-            <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-red-500">
-                <p class="text-sm font-medium text-gray-500">Laporan Gagal/Masalah Baru</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">3</p>
-                <p class="text-sm text-red-600 mt-2">Perlu Ditindaklanjuti!</p>
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                    Rp {{ number_format($currentMonthRevenue, 0, ',', '.') }}
+                </p>
+
+                <p class="text-sm mt-2 {{ $growth >= 0 ? 'text-green-600' : 'text-red-600' }}">
+                    {{ $growth >= 0 ? '▲' : '▼' }}
+                    {{ number_format(abs($growth), 1) }}% dari Bulan Lalu
+                </p>
             </div>
 
             <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-cyan-500">
                 <p class="text-sm font-medium text-gray-500">Total Pelanggan Aktif</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">450</p>
-                <p class="text-sm text-green-600 mt-2">▲ 30 Pengguna Baru</p>
-            </div>
+                
+                <p class="text-3xl font-bold text-gray-900 mt-1">
+                    {{ number_format($totalActiveSubscribers) }}
+                </p>
 
-            <div class="bg-white p-5 rounded-xl shadow-lg border-b-4 border-gray-400">
-                <p class="text-sm font-medium text-gray-500">Tingkat Berhenti Langganan</p>
-                <p class="text-3xl font-bold text-gray-900 mt-1">4.2%</p>
-                <p class="text-sm text-red-600 mt-2">▲ 0.5% (Tingkat Kenaikan)</p>
+                <p class="text-sm text-green-600 mt-2">
+                    @if($newSubscribersThisMonth > 0)
+                        ▲ {{ $newSubscribersThisMonth }} Pengguna Baru
+                    @else
+                        <span class="text-gray-400">0 Pengguna Baru</span>
+                    @endif
+                </p>
             </div>
         </div>
 
@@ -60,7 +65,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php
                                 $status = strtolower($report['status']);
-                                if ($status == 'paid' || $status == 'active') {
+                                if ($status == 'paid' || $status == 'paid') {
                                     $color = 'bg-green-100 text-green-800';
                                 } elseif ($status == 'pending') {
                                     $color = 'bg-yellow-100 text-yellow-800';
@@ -75,9 +80,10 @@
                                 {{ $report['status'] }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button 
-                                class="subs-trigger text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs" 
+                                type="button"
+                                class="subs-trigger text-cyan-600 hover:text-cyan-900 font-semibold"
                                 data-id="{{ $report['id_subscribe'] }}"
                                 data-username="{{ $report['username'] }}" 
                                 data-start-date="{{ $report['start_date'] }}"
@@ -87,6 +93,7 @@
                                 Detail
                             </button>
                         </td>
+
                     </tr>
                     @empty
                     <tr>

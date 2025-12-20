@@ -23,6 +23,7 @@ class SubcribeUserController extends Controller
             'start_date' => $startDate,
             'end_date' => $endDate,
             'status' => 'active', // Langganan langsung aktif
+            'price' => 59000
         ]);
 
         // 3. Redirect ke halaman tampilan setelah sukses

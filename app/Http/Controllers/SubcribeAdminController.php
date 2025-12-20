@@ -4,13 +4,50 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Subscribe;
+use Carbon\Carbon;
 
 class SubcribeAdminController extends Controller
 {
     public function reportsSubscribeIndex()
     {
         $subscribe = Subscribe::all();
-        return view('admin.subscribe', compact('subscribe'));
+
+        // Revenue bulan ini (HANYA yang PAID)
+        $currentMonthRevenue = Subscribe::where('status', 'paid')
+            ->whereMonth('start_date', now()->month)
+            ->whereYear('start_date', now()->year)
+            ->sum('price');
+
+        // Revenue bulan lalu
+        $lastMonthRevenue = Subscribe::where('status', 'paid')
+            ->whereMonth('start_date', now()->subMonth()->month)
+            ->whereYear('start_date', now()->subMonth()->year)
+            ->sum('price');
+
+        // Growth (%)
+        $growth = 0;
+        if ($lastMonthRevenue > 0) {
+            $growth = (($currentMonthRevenue - $lastMonthRevenue) / $lastMonthRevenue) * 100;
+        }
+
+        // Total pelanggan aktif (paid & belum expired)
+        $totalActiveSubscribers = Subscribe::where('status', 'paid')
+            ->whereDate('end_date', '>=', now())
+            ->count();
+
+        // Pelanggan baru bulan ini
+        $newSubscribersThisMonth = Subscribe::where('status', 'paid')
+            ->whereMonth('start_date', now()->month)
+            ->whereYear('start_date', now()->year)
+            ->count();
+
+        return view('admin.subscribe', compact(
+            'subscribe',
+            'currentMonthRevenue',
+            'growth',
+            'totalActiveSubscribers',
+            'newSubscribersThisMonth'
+        ));
     }
 
     public function destroy($id)
