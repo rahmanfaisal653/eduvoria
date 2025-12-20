@@ -51,6 +51,9 @@ class ReplyController extends Controller
             }
         }
 
+        // Set flag untuk skip view count saat redirect kembali ke postingan
+        session()->put('skip_view_count_' . $postId, true);
+        
         return redirect()->back()->with('success', 'Balasan berhasil ditambahkan!');
     }
 

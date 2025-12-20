@@ -80,29 +80,37 @@
 
 
 <div class="mt-8">
-    <!-- Tombol tambah postingan -->
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">Postingan Saya</h2>
-        <a href="{{ route('posts.create') }}" 
-           class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-700">
-            + Tambah Postingan
-        </a>
-    </div>
+    <!-- Tombol tambah postingan (hanya tampil di profil sendiri) -->
+    @if(Auth::id() == $user->id)
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Postingan Saya</h2>
+            <a href="{{ route('posts.create') }}" 
+               class="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-teal-700">
+                + Tambah Postingan
+            </a>
+        </div>
+    @else
+        <div class="mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Postingan {{ $user->name }}</h2>
+        </div>
+    @endif
 
     @forelse ($posts as $post)
         <div class="mb-6">
             <div class="rounded-xl bg-white p-5 shadow-lg relative">
 
-                <!-- Tombol edit dan hapus -->
-                <div class="absolute top-4 right-4 flex space-x-2">
-                    <a href="{{ route('posts.edit', $post->id) }}" 
-                       class="text-blue-600 hover:text-blue-800 text-sm font-semibold">✏ Edit</a>
-                    <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Yakin hapus postingan ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-semibold">🗑 Hapus</button>
-                    </form>
-                </div>
+                <!-- Tombol edit dan hapus (hanya tampil untuk pemilik) -->
+                @if(Auth::id() == $post->user_id)
+                    <div class="absolute top-4 right-4 flex space-x-2">
+                        <a href="{{ route('posts.edit', $post->id) }}" 
+                           class="text-blue-600 hover:text-blue-800 text-sm font-semibold">✏ Edit</a>
+                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" onsubmit="return confirm('Yakin hapus postingan ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-semibold">🗑 Hapus</button>
+                        </form>
+                    </div>
+                @endif
 
                 <div class="flex justify-between items-start">
                     <div class="flex items-center space-x-3">
