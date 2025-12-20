@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /* =========================
+        LOGIN
+    ========================== */
+
     public function showLogin()
     {
         return view('auth.login');
@@ -21,21 +25,48 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
-            // Redirect based on user role
-            if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-            
-            return redirect()->intended('/homepage');
+        // Ambil user berdasarkan email
+        $user = User::where('email', $credentials['email'])->first();
+
+        // Jika user tidak ditemukan
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah.'
+            ])->withInput($request->only('email'));
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+        // Jika akun diblokir
+        if (strtolower(trim($user->status)) === 'blocked') {
+            return back()->withErrors([
+                'email' => 'Akun Anda telah diblokir. Silakan hubungi admin.'
+            ])->withInput($request->only('email'));
+        }
+
+        // Proses login (HANYA user active)
+        if (!Auth::attempt([
+            'email' => $credentials['email'],
+            'password' => $credentials['password'],
+            'status' => 'active'
+        ])) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah.'
+            ])->withInput($request->only('email'));
+        }
+
+        // Regenerate session (security)
+        $request->session()->regenerate();
+
+        // Redirect berdasarkan role
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->intended('/homepage');
     }
+
+    /* =========================
+        REGISTER
+    ========================== */
 
     public function showRegister()
     {
@@ -51,10 +82,11 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'user'
+            'role'     => 'user',
+            'status'   => 'active' // 🔥 PENTING
         ]);
 
         Auth::login($user);
@@ -62,12 +94,17 @@ class AuthController extends Controller
         return redirect('/homepage');
     }
 
+    /* =========================
+        LOGOUT
+    ========================== */
+
     public function logout(Request $request)
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/');
     }
 }

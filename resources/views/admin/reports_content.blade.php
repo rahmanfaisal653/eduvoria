@@ -11,20 +11,20 @@
         {{-- Metrik Ringkasan Laporan --}}
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-red-500">
+                <p class="text-sm font-medium text-gray-500">Total Laporan Aktif</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($totalReport) }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-red-500">
                 <p class="text-sm font-medium text-gray-500">Laporan Prioritas Tinggi</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">5</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($highPriority) }}</p>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-orange-500">
-                <p class="text-sm font-medium text-gray-500">Perlu Review Cepat</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">12</p>
+                <p class="text-sm font-medium text-gray-500">Laporan Prioritas Sedang</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($mediumPriority) }}</p>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-teal-500">
-                <p class="text-sm font-medium text-gray-500">Total Laporan Aktif</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">28</p>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-cyan-500">
-                <p class="text-sm font-medium text-gray-500">Kasus Selesai Hari Ini</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">7</p>
+                <p class="text-sm font-medium text-gray-500">Laporan Prioritas Rendah</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($lowPriority) }}</p>
             </div>
         </div>
 
@@ -48,7 +48,7 @@
                         
                         {{-- 1. ID LAPORAN --}}
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            #{{ $report->id }}
+                            #{{ $report->id_report }}
                         </td>
 
                         {{-- 2. TIPE PELANGGARAN --}}
@@ -97,7 +97,7 @@
                             {{-- TOMBOL EDIT --}}
                             <button type="button"
                                     class="edit-report-btn text-blue-600 hover:text-blue-900 font-semibold"
-                                    data-id="{{ $report->id }}"
+                                    data-id="{{ $report->id_report }}"
                                     data-type="{{ $report->type }}"
                                     data-priority="{{ $report->priority }}"
                                     data-description="{{ $report->description }}">
@@ -107,7 +107,7 @@
                             <a href="#"
                                 class="detail-report-btn inline-flex items-center justify-center
                                 text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs"
-                                data-id="{{ $report->id }}"
+                                data-id="{{ $report->id_report }}"
                                 data-type="{{ $report->type }}"
                                 data-priority="{{ $report->priority }}"
                                 data-description="{{ $report->description }}"
@@ -117,7 +117,7 @@
                             </a>
 
                             {{-- 3. TOMBOL HAPUS LANGSUNG (Kode Kamu) --}}
-                            <a href="{{ route('admin.reports.delete', $report->id) }}" 
+                            <a href="{{ route('admin.reports.delete', $report->id_report) }}" 
                             onclick="return confirm('Yakin hapus laporan ini?')"
                             class="text-red-600 hover:text-red-900 cursor-pointer">
                             Hapus

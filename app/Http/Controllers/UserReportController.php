@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ReportAdmin;
+use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 
 class UserReportController extends Controller
@@ -26,7 +26,7 @@ class UserReportController extends Controller
             // Contoh path: 'reports/namafileunik.jpg'
         }
 
-        ReportAdmin::create([
+        Report::create([
             'type' => $request->type,
             'content_summary' => $request->content_summary,
             'description' => $request->description,

@@ -45,6 +45,7 @@ class SubcribeAdminController extends Controller
     public function store(Request $request)
     {
         Subscribe::create([
+            'id_subscribe' => $request->id_subscribe,
             'useraname' => $request->username,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,

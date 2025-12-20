@@ -8,18 +8,14 @@
         <h2 class="text-2xl font-semibold text-gray-800">Manajemen Konten Publik</h2>
 
         {{-- Metrik Konten --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-cyan-500">
                 <p class="text-sm font-medium text-gray-500">Total Postingan</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">15.8K</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($totalPost) }}</p>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-teal-500">
                 <p class="text-sm font-medium text-gray-500">Postingan Gambar/Video</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">9.2K</p>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-red-500">
-                <p class="text-sm font-medium text-gray-500">Perlu Review Cepat</p>
-                <p class="text-2xl font-bold text-gray-900 mt-1">12</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ number_format($postWithImage) }}</p>
             </div>
         </div>
 

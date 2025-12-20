@@ -50,8 +50,6 @@
                     <select name="status" id="edit-status" required
                         class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-teal-500 focus:ring-teal-500">
                         <option value="active">Active (Tayang)</option>
-                        <option value="inactive">Inactive (Disembunyikan)</option>
-                        <option value="archived">Archived (Diarsipkan)</option>
                         <option value="reported">Reported (Dilaporkan)</option>
                     </select>
                 </div>

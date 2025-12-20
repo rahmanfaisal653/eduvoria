@@ -52,8 +52,8 @@
                 <tbody class="divide-y divide-gray-200">
                     {{-- Loop data $subscribe dari Controller --}}
                     @forelse ($subscribe as $report)
-                    <tr class="hover:bg-gray-50" data-subs-id="{{ $report['id'] }}">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $report['id'] }}</td>
+                    <tr class="hover:bg-gray-50" data-subs-id="{{ $report['id_subscribe'] }}">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $report['id_subscribe'] }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['username'] }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['start_date'] }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['end_date'] }}</td>
@@ -78,7 +78,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                             <button 
                                 class="subs-trigger text-white bg-cyan-600 hover:bg-cyan-700 py-1 px-3 rounded text-xs" 
-                                data-id="{{ $report['id'] }}"
+                                data-id="{{ $report['id_subscribe'] }}"
                                 data-username="{{ $report['username'] }}" 
                                 data-start-date="{{ $report['start_date'] }}"
                                 data-end-date="{{ $report['end_date'] }}"

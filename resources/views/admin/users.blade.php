@@ -13,12 +13,10 @@
                 type="text"
                 placeholder="Cari berdasarkan Nama atau Email..."
                 class="w-full max-w-sm rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500"
-            />
-            <select class="rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500">
-                <option>Filter Status: Semua</option>
-                <option>Status: Aktif</option>
-                <option>Status: Diblokir</option>
-            </select>
+            />               
+
+            {{-- Tombol Tambah Pengguna --}}
+
             <button id="add-user-btn" class="bg-teal-600 text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-teal-700">
                 Tambah Pengguna Baru
             </button>

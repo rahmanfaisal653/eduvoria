@@ -7,6 +7,11 @@
     <title>Connectify - Login</title>
     </head>
 <body class="bg-gray-50 flex items-center justify-center min-h-screen">
+    @if ($errors->any())
+        <div class="text-red-500 text-sm mb-3">
+            {{ $errors->first() }}
+        </div>
+    @endif
 
     <div class="w-full max-w-md"> 
         <div class="text-center mb-8">

@@ -3,19 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ReportAdmin;
+use App\Models\Report;
 
 class ReportAdminController extends Controller
 {
     public function reportsContentIndex()
     {
-        $reports = ReportAdmin::all();
-        return view('admin.reports_content', compact('reports'));
+        $reports = Report::all();
+        $totalReport = Report::count();
+        $highPriority = Report::where('priority', 'High')->count();
+        $mediumPriority = Report::where('priority', 'Medium')->count();
+        $lowPriority = Report::where('priority', 'Low')->count();
+        return view('admin.reports_content', compact('reports', 'totalReport', 'highPriority', 'mediumPriority', 'lowPriority'));
     }
 
     public function store(Request $request)
     {
-        ReportAdmin::create([
+        Report::create([
             'type' => $request->type,
             'reported_by' => $request->reported_by,
             'description' => $request->description,
@@ -28,7 +32,7 @@ class ReportAdminController extends Controller
 
     public function edit($id)
     {
-        $report = ReportAdmin::findOrFail($id);
+        $report = Report::findOrFail($id);
         return view('componentsAdmin.edit-reports-modal', compact('report'));
     }
 
@@ -39,7 +43,7 @@ class ReportAdminController extends Controller
             $filePath = $request->file('foto')->store('reports', 'public');
         }
 
-        $report = ReportAdmin::findOrFail($id);
+        $report = Report::findOrFail($id);
         $report->update([
             'type' => $request->type,
             'priority' => $request->priority,
@@ -52,7 +56,7 @@ class ReportAdminController extends Controller
 
     public function destroy($id)
     {
-        $report = ReportAdmin::findOrFail($id);
+        $report = Report::findOrFail($id);
         $report->delete();
 
         return redirect()->route('admin.reports');

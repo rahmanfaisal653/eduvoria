@@ -10,7 +10,9 @@ class PostAdminController extends Controller
     public function contentIndex()
     {
         $posts = Post::with('user')->get();
-        return view('admin.content', compact('posts'));
+        $totalPost = Post::count(); 
+        $postWithImage = Post::whereNotNull('image')->count();
+        return view('admin.content', compact('posts' , 'totalPost', 'postWithImage'));
     }
 
     public function create()

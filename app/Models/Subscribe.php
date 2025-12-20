@@ -13,6 +13,7 @@ class Subscribe extends Model
     protected $primaryKey = 'id_subscribe';
     public $incrementing = true;
     protected $fillable = [
+        'id_subscribe',
         'username',
         'start_date',
         'end_date',
