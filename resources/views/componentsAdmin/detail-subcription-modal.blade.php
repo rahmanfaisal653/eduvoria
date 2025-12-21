@@ -18,6 +18,10 @@
                     <span>End Date:</span>
                     <strong id="modal-subs-end"></strong>
                 </div>
+                <div class="flex justify-between">
+                    <span>Payment Method:</span>
+                    <strong id="modal-subs-method"></strong>
+                </div>
 
                 <form id="form-update-status" action="" method="POST" class="mt-2 pt-2 border-t border-gray-100">
                     @csrf
@@ -81,6 +85,7 @@
         const modalUser = document.getElementById('modal-subs-username');
         const modalStart = document.getElementById('modal-subs-start');
         const modalEnd = document.getElementById('modal-subs-end');
+        const modalMethod = document.getElementById('modal-subs-method');
 
         triggers.forEach(button => {
             button.addEventListener('click', function () {
@@ -89,6 +94,7 @@
                 const username = this.getAttribute('data-username');
                 const start = this.getAttribute('data-start-date');
                 const end = this.getAttribute('data-end-date');
+                const method = this.getAttribute('data-payment-method');
                 const status = this.getAttribute('data-status');
 
                 // 2. Isi Teks Modal
@@ -96,6 +102,7 @@
                 modalUser.innerText = username;
                 modalStart.innerText = start;
                 modalEnd.innerText = end;
+                modalMethod.innerText = method;
 
                 // 3. Isi Hidden Input
                 if(inputUser) inputUser.value = username;
