@@ -101,8 +101,9 @@ class User extends Authenticatable
     // cek apakah user ini sedang aktif subscribe
     public function isSubscribed(): bool
     {
-        // pakai scope active() dari model Subscribe (yang tadi kita buat)
-        return Subscribe::active()
+        // Cari data di tabel subscribes yang punya user_id sama dengan user ini
+        // dan masuk dalam scope active (status paid & belum expired)
+        return \App\Models\Subscribe::active()
             ->where('username', $this->name)
             ->exists();
     }

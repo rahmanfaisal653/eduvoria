@@ -17,14 +17,21 @@ class Subscribe extends Model
         'username',
         'start_date',
         'end_date',
-        'status'
+        'status',
+        'price',
+        'payment_method',
     ];
 
     public function scopeActive($query)
     {
         return $query
-            ->where('status', 'active') 
+            ->where('status', 'paid') 
             ->whereDate('start_date', '<=', now())
             ->whereDate('end_date', '>=', now());
+    }
+
+    public function subscribes()
+    {
+        return $this->hasMany(Subscribe::class, 'user_id');
     }
 }

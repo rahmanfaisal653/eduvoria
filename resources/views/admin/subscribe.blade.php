@@ -50,6 +50,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Username</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Start Date</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">End Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Method Payment</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Status Pembayaran</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-cyan-700 uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -62,6 +63,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['username'] }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['start_date'] }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $report['end_date'] }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ucwords(str_replace('_', ' ', $report['payment_method'])) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php
                                 $status = strtolower($report['status']);
@@ -89,6 +91,8 @@
                                 data-start-date="{{ $report['start_date'] }}"
                                 data-end-date="{{ $report['end_date'] }}"
                                 data-status="{{ $report['status'] }}"
+                                data-price="{{ $report['price'] }}"
+                                data-payment-method="{{ $report['payment_method'] }}"
                             >
                                 Detail
                             </button>

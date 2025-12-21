@@ -55,10 +55,22 @@
     </form>
 
     <div class="flex items-center space-x-4">
-      <button id="open-subscribe-modal"
-        class="bg-cyan-500 text-white py-1.5 px-3 rounded-full text-sm font-semibold hover:bg-cyan-600 transition shadow-md relative z-50">
-        Subscribe
-      </button>
+    @auth
+        @if(!auth()->user()->isSubscribed())
+            <button id="open-subscribe-modal"
+                class="group relative inline-flex items-center justify-center px-5 py-2 overflow-hidden font-bold text-white transition-all duration-300 bg-cyan-500 rounded-full hover:bg-cyan-600 shadow-[0_4px_14px_0_rgba(6,182,212,0.39)] hover:shadow-cyan-500/50">
+                <span class="relative text-sm">Subscribe</span>
+            </button>
+        @else
+            <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-cyan-50 to-white px-4 py-1.5 rounded-full border border-cyan-100 shadow-sm">
+                <div class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                </div>
+                <span class="text-cyan-700 text-xs font-extrabold uppercase tracking-widest">Eduvoria Pro</span>
+            </div>
+        @endif
+    @endauth
 
       <div class="relative">
         <button

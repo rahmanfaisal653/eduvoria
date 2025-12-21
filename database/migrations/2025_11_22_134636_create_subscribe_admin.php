@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('end_date');
             $table->enum('status', ['paid', 'pending', 'Failed', 'Cancelled'])->default('pending');
             $table->decimal('price', 10, 2)->default(59000);
+            $table->enum('payment_method', ['credit_card', 'bank_transfer', 'e_wallet'])->default('credit_card');
             $table->timestamps();
         });
     }

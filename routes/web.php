@@ -138,7 +138,21 @@ Route::group([
 
 });
 
-Route::post('/subscribe/store', [SubcribeUserController::class, 'store'])->name('user.subscribe.store');
+Route::middleware(['auth'])->group(function () {
+    
+    // 1. Proses data dari tombol pricing
+    Route::post('/subscribe/prepare', [SubcribeUserController::class, 'prepare'])
+        ->name('users.subscribe.prepare');
+
+    // 2. Tampilkan halaman pilih metode pembayaran
+    Route::get('/subscribe/checkout', [SubcribeUserController::class, 'checkout'])
+        ->name('users.subscribe.checkout');
+
+    // 3. Simpan final ke database
+    Route::post('/subscribe/confirm', [SubcribeUserController::class, 'store'])
+        ->name('users.subscribe.confirm');
+        
+});
 
 Route::post('/report/submit', [UserReportController::class, 'store'])->name('user.report.store');
 

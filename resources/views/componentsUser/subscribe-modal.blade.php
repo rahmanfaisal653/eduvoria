@@ -17,18 +17,19 @@
             </div>
             
             {{-- FORM SUBMISSION LANGGANAN INSTAN --}}
-            <form action="{{ route('user.subscribe.store') }}" method="POST">
-                @csrf
-                
-                {{-- Data yang dikirim --}}
-                <input type="hidden" name="plan_type" value="premium_connectify">
-                <input type="hidden" name="price" value="59000">
+            @auth
+                <form action="{{ route('users.subscribe.prepare') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="plan_type" value="premium_connectify">
+                    <input type="hidden" name="price" value="59000">
 
-                <button type="submit" class="w-full py-3 bg-cyan-600 text-white font-bold rounded-lg hover:bg-cyan-700 transition shadow-lg">
-                    Berlangganan Sekarang (Rp 59.000 / Bulan)
-                </button>
-            </form>
-            
+                    <button type="submit" class="w-full py-3 bg-cyan-600 text-white font-bold rounded-lg hover:bg-cyan-700 transition shadow-lg">
+                        Berlangganan Sekarang (Rp 59.000 / Bulan)
+                    </button>
+                </form>
+            @else
+            @endauth
+
             <button id="close-modal-button" class="mt-3 w-full py-2 text-sm text-gray-500 hover:text-gray-700">
                 Lain kali
             </button>
