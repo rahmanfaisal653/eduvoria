@@ -9,11 +9,15 @@
 
         {{-- Kontrol Filter/Pencarian --}}
         <div class="bg-white p-4 rounded-xl shadow-md flex justify-between items-center space-x-4">
-            <input
-                type="text"
-                placeholder="Cari berdasarkan Nama atau Email..."
-                class="w-full max-w-sm rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500"
-            />               
+            <form method="GET" action="{{ route('admin.users') }}">
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Cari berdasarkan Nama atau Email..."
+                    class="w-full max-w-sm rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500"
+                />
+            </form>
 
             {{-- Tombol Tambah Pengguna --}}
 

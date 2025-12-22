@@ -89,6 +89,7 @@ Route::group([
     Route::post('/users/update/{id}', [UserAdminController::class, 'update'])->name('users.update');
     Route::get('/users/delete/{id}', [UserAdminController::class, 'destroy'])->name('users.delete');
     Route::post('/admin/users/{id}/unblock', [UserAdminController::class, 'unblockUser'])->name('admin.users.unblock');
+    Route::get('/admin/users', [UserAdminController::class, 'index'])->name('users');
 
     // ==============================================================
 

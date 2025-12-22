@@ -72,4 +72,23 @@ class UserAdminController extends Controller
 
         return redirect()->route('admin.users')->with('success', 'User has been unblocked successfully.');
     }
+
+    public function index(Request $request)
+    {
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->get();
+
+        return view('admin.users', compact('users'));
+    }
+
 }
