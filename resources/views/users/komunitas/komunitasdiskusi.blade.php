@@ -168,8 +168,9 @@
             @auth
                 @php
                     $currentUser = auth()->user();
-                    $canEditPost = ($currentUser->name === ($post->author_name ?? ''))
-                                   || ($bolehKelola ?? false);
+                $isStillMember = ($isMember ?? false) || ($isOwner ?? false);
+                $canEditPost = ($bolehKelola ?? false)
+                         || ($isStillMember && ($currentUser->name === ($post->author_name ?? '')));
                 @endphp
 
                 @if($canEditPost)

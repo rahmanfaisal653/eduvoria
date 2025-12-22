@@ -56,7 +56,14 @@ class CommunityPostController extends Controller
 
         $isOwner  = ($community->owner_id === $user->id);
         $isAdmin  = ($user->role === 'admin');
+        $isMember = $user->isMemberOf($community->id);
         $isAuthor = ($post->author_name === $user->name);
+
+        // Jika user sudah keluar dari komunitas, dia tidak boleh edit postingan komunitas
+        // (kecuali owner komunitas atau admin).
+        if (!$isOwner && !$isAdmin && !$isMember) {
+            abort(403, 'Kamu sudah keluar dari komunitas ini, jadi tidak bisa mengedit postingan.');
+        }
 
         if (!$isOwner && !$isAdmin && !$isAuthor) {
             abort(403, 'Kamu tidak punya akses mengedit postingan ini.');
@@ -74,7 +81,12 @@ class CommunityPostController extends Controller
         $user = Auth::user();
         $isOwner  = ($community->owner_id === $user->id);
         $isAdmin  = ($user->role === 'admin');
+        $isMember = $user->isMemberOf($community->id);
         $isAuthor = ($post->author_name === $user->name);
+
+        if (!$isOwner && !$isAdmin && !$isMember) {
+            abort(403, 'Kamu sudah keluar dari komunitas ini, jadi tidak bisa mengupdate postingan.');
+        }
 
         if (!$isOwner && !$isAdmin && !$isAuthor) {
             abort(403, 'Kamu tidak punya akses mengupdate postingan ini.');
@@ -107,7 +119,12 @@ class CommunityPostController extends Controller
         $user = Auth::user();
         $isOwner  = ($community->owner_id === $user->id);
         $isAdmin  = ($user->role === 'admin');
+        $isMember = $user->isMemberOf($community->id);
         $isAuthor = ($post->author_name === $user->name);
+
+        if (!$isOwner && !$isAdmin && !$isMember) {
+            abort(403, 'Kamu sudah keluar dari komunitas ini, jadi tidak bisa menghapus postingan.');
+        }
 
         if (!$isOwner && !$isAdmin && !$isAuthor) {
             abort(403, 'Kamu tidak punya akses menghapus postingan ini.');
