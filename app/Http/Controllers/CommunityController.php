@@ -11,8 +11,7 @@ class CommunityController extends Controller
 {
     public function __construct()
     {
-        // index & show boleh guest, lainnya wajib login
-        $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('auth');
     }
 
     // LIST SEMUA KOMUNITAS
