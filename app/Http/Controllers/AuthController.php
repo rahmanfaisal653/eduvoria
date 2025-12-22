@@ -61,7 +61,7 @@ class AuthController extends Controller
             return redirect()->route('admin.users');
         }
 
-        return redirect()->intended('/users');
+        return redirect()->intended('/homepage');
     }
 
     /* =========================
