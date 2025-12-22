@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PostAdminController extends Controller
 {
@@ -22,16 +24,20 @@ class PostAdminController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        if ($user->role !== 'admin') {
+            abort(403, 'Akses ditolak');
+        }
+
         $imagePath = null;
         
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('posts', 'public');
-        }
-        
-        $staticAdminId = 1; 
+        } 
 
         Post::create([
-            'user_id' => $staticAdminId, 
+            'user_id' => $user->id, 
             'content' => $request->content,
             'image' => $imagePath, 
             'status' => $request->status,
@@ -48,7 +54,6 @@ class PostAdminController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $post = Post::findOrFail($id);
         
         if ($request->hasFile('image')) {

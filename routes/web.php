@@ -73,7 +73,7 @@ Route::group([
     'middleware' => ['auth'], // <-- DITAMBAH: admin area wajib login
 ], function () {
 
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
     // ==============================================================
     // 2. MANAGEMENT USERS (DIPERBARUI)

@@ -18,7 +18,7 @@
         </div>
         <nav class="flex-grow p-4 space-y-2">
             
-            <!-- <a href="{{ route('admin.dashboard') }}" class="flex items-center p-3 rounded-lg @if(request()->routeIs('admin.dashboard')) bg-teal-600 font-semibold shadow-md @else text-gray-300 hover:bg-gray-700 @endif"> -->
+            <!-- <a href="" class="flex items-center p-3 rounded-lg @if(request()->routeIs('admin.dashboard')) bg-teal-600 font-semibold shadow-md @else text-gray-300 hover:bg-gray-700 @endif"> -->
 
             <!-- Kelas aktif akan dikontrol di view yang meng-extend (misalnya: 'bg-teal-600 font-semibold shadow-md') -->
             <!-- <a href="" class="flex items-center p-3 rounded-lg @if(request()->routeIs('admin.dashboard')) bg-teal-600 font-semibold shadow-md @else text-gray-300 hover:bg-gray-700 @endif">
