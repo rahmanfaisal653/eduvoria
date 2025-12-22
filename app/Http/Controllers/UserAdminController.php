@@ -39,12 +39,18 @@ class UserAdminController extends Controller
     public function update(Request $request, $id)
     {
         $users = User::findOrFail($id);
-        $users->update([
+        // Hanya update password jika admin mengisi field password
+        $data = [
             'email' => $request->email,
             'name' => $request->name,
-            'password' => bcrypt($request->password),
             'status' => $request->status,
-        ]);
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $users->update($data);
 
         return redirect()->route('admin.users');
     }
@@ -55,5 +61,15 @@ class UserAdminController extends Controller
         $users->delete();
 
         return redirect()->route('admin.users');
+    }
+
+    public function unblockUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Update user status to active
+        $user->update(['status' => 'active']);
+
+        return redirect()->route('admin.users')->with('success', 'User has been unblocked successfully.');
     }
 }
