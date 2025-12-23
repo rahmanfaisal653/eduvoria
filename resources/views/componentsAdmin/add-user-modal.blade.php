@@ -29,8 +29,8 @@
                  <div>
                     <label for="new-status" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status" id="new-status" class="mt-1 w-full rounded-lg border border-gray-300 py-2 px-3 text-sm focus:border-teal-500 focus:ring-teal-500">
-                        <option value="active">Aktif</option>
-                        <option value="blocked">Diblokir</option>
+                        <option value="active">Active</option>
+                        <option value="blocked">Blocked</option>
                         </select>
                 </div>
                 

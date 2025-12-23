@@ -25,6 +25,17 @@ class DatabaseSeeder extends Seeder
             'following_count' => 50
         ]);
 
+        $admin2 = User::create([
+            'name' => 'Admin Eduvoria 2',
+            'email' => 'admin2@eduvoria.com',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin',
+            'bio' => 'Administrator platform Eduvoria',
+            'hobi' => 'Mengelola komunitas belajar',
+            'followers_count' => 800,
+            'following_count' => 30
+        ]);
+
         // Create Test Users
         $user1 = User::create([
             'name' => 'Faisal Rahman',

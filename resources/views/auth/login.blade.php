@@ -7,12 +7,6 @@
     <title>Connectify - Login</title>
     </head>
 <body class="bg-gray-50 flex items-center justify-center min-h-screen">
-    @if ($errors->any())
-        <div class="text-red-500 text-sm mb-3">
-            {{ $errors->first() }}
-        </div>
-    @endif
-
     <div class="w-full max-w-md"> 
         <div class="text-center mb-8">
             <div class="text-4xl font-extrabold text-teal-600 mb-2">Eduvoria</div>
@@ -52,6 +46,17 @@
                         />
                     </div>
                 </div>
+
+                @if ($errors->any())
+                    <div class="mb-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                        <svg class="h-5 w-5 flex-shrink-0 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v3m0 4h.01M12 3a9 9 0 100 18 9 9 0 000-18z" />
+                        </svg>
+
+                        <span>{{ $errors->first() }}</span>
+                    </div>
+                @endif
 
                 <div>
                     <button

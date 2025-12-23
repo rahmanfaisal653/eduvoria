@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('content');
             $table->string('image')->nullable();
             $table->integer('likes_count')->default(0);
-            $table->string('status')->default('tayang');
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }

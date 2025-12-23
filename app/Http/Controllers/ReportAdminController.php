@@ -17,19 +17,6 @@ class ReportAdminController extends Controller
         return view('admin.reports_content', compact('reports', 'totalReport', 'highPriority', 'mediumPriority', 'lowPriority'));
     }
 
-    public function store(Request $request)
-    {
-        Report::create([
-            'type' => $request->type,
-            'reported_by' => $request->reported_by,
-            'description' => $request->description,
-            'priority' => $request->priority,
-            'content_summary' => $request->content_summary,
-        ]);
-
-        return redirect()->route('admin.reports');
-    }
-
     public function edit($id)
     {
         $report = Report::findOrFail($id);
