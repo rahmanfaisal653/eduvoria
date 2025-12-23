@@ -107,11 +107,7 @@ class PostController extends Controller
             ->withCount('replies')
             ->findOrFail($id);
 
-        // Increment views setiap kali postingan dibuka
-        // Hanya jika:
-        // 1. User sudah login
-        // 2. Bukan pemilik postingan
-        // 3. Bukan dari aksi reply (ada session flag dari reply)
+        
         $skipViewCount = session()->has('skip_view_count_' . $id);
         
         if (

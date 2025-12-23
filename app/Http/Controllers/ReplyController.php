@@ -26,10 +26,9 @@ class ReplyController extends Controller
         $reply->content = $request['content'];
         $reply->save();
 
-        // =========================
-        // ✅ NOTIFIKASI (TAMBAHAN)
-        // =========================
-        // ❗ tidak buat notif kalau reply ke postingan sendiri
+  
+        // NOTIFIKASI (TAMBAHAN)
+        // tidak buat notif kalau reply ke postingan sendiri
         if ($post->user_id != Auth::id()) {
 
             // (opsional) cegah spam notifikasi reply/comment yang sama persis

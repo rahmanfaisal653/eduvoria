@@ -28,21 +28,14 @@ class AuthController extends Controller
         // Ambil user berdasarkan email
         $user = User::where('email', $credentials['email'])->first();
 
-        // Jika user tidak ditemukan
-        if (!$user) {
-            return back()->withErrors([
-                'email' => 'Email atau password salah.'
-            ])->withInput($request->only('email'));
-        }
-
         // Jika akun diblokir
-        if (strtolower(trim($user->status)) === 'blocked') {
+        if ($user && strtolower(trim($user->status)) === 'blocked') {
             return back()->withErrors([
                 'email' => 'Akun Anda telah diblokir. Silakan hubungi admin.'
             ])->withInput($request->only('email'));
         }
 
-        // Proses login (HANYA user active)
+        // Proses login (cek user ada, password benar, status active)
         if (!Auth::attempt([
             'email' => $credentials['email'],
             'password' => $credentials['password'],
@@ -86,7 +79,7 @@ class AuthController extends Controller
             'email'    => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role'     => 'user',
-            'status'   => 'active' // 🔥 PENTING
+            'status'   => 'active' 
         ]);
 
         Auth::login($user);

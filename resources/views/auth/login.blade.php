@@ -32,6 +32,7 @@
                             autocomplete="email"
                             required
                             placeholder="anda@contoh.com"
+                            value="{{ old('email') }}"
                             class="w-full rounded-lg border border-gray-300 py-2 px-3 text-gray-900 focus:border-teal-500 focus:ring-teal-500 shadow-sm sm:text-sm"
                         />
                     </div>

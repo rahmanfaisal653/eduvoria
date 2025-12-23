@@ -63,11 +63,11 @@
                 </div>
 
                 <div>
-                    <label for="confirm-password" class="block text-sm font-medium text-gray-700">Konfirmasi Kata Sandi</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Konfirmasi Kata Sandi</label>
                     <div class="mt-1">
                         <input
-                            id="confirm-password"
-                            name="confirm-password"
+                            id="password_confirmation"
+                            name="password_confirmation"
                             type="password"
                             required
                             placeholder="••••••••"
