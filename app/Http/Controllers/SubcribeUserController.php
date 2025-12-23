@@ -6,11 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Subscribe;
 use Illuminate\Support\Facades\Auth;
 
-class SubcribeUserController extends Controller // Perbaikan typo: Subcribe -> Subscribe
+class SubcribeUserController extends Controller 
 {
-    /**
-     * Tahap 1: Tangkap data paket dari Landing Page/Pricing.
-     */
     public function prepare(Request $request)
     {
         // Validasi input agar tidak ada data kosong masuk ke session
@@ -30,9 +27,6 @@ class SubcribeUserController extends Controller // Perbaikan typo: Subcribe -> S
         return redirect()->route('users.subscribe.checkout');
     }
 
-    /**
-     * Tahap 2: Tampilkan halaman pilihan pembayaran.
-     */
     public function checkout()
     {
         $pending = session('pending_sub');
@@ -45,9 +39,6 @@ class SubcribeUserController extends Controller // Perbaikan typo: Subcribe -> S
         return view('users.subscribe.checkout', compact('pending'));
     }
 
-    /**
-     * Tahap 3: Simpan ke database setelah user memilih metode pembayaran.
-     */
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -55,7 +46,6 @@ class SubcribeUserController extends Controller // Perbaikan typo: Subcribe -> S
 
         // Cek apakah data paket masih ada di session
         if (!$pending) {
-            // Arahkan langsung ke URL landing page (biasanya '/')
             return redirect('homepage')->with('error', 'Sesi Anda telah berakhir.');
         }
 
@@ -67,7 +57,7 @@ class SubcribeUserController extends Controller // Perbaikan typo: Subcribe -> S
         // Simpan ke Database
         Subscribe::create([
             'user_id' => $user->id,
-            'username' => $user->name, // Pastikan kolom di DB adalah 'username' bukan 'useraname'
+            'username' => $user->name, 
             'start_date' => now(),
             'end_date' => now()->addDays(30), 
             'status' => 'pending', 
@@ -78,7 +68,6 @@ class SubcribeUserController extends Controller // Perbaikan typo: Subcribe -> S
         // Hapus session agar tidak bisa di-refresh untuk duplikat data
         session()->forget('pending_sub');
 
-        // Pastikan route 'dashboard' sudah terdaftar di web.php
         return redirect()->route('homepage');
     }
 }

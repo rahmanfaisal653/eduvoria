@@ -75,14 +75,9 @@ Route::group([
 
     // Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // ==============================================================
-    // 2. MANAGEMENT USERS (DIPERBARUI)
-    // ==============================================================
-    // Route untuk menampilkan tabel (GET)
-    // Mengarah ke UserAdminController method usersindex
+    // 2. USER MANAGEMENT (Name: admin.users)
     Route::get('/users', [UserAdminController::class, 'usersindex'])->name('users');
 
-    // Route untuk memproses form tambah user (POST)
     // Ini yang dipanggil di form action="{{ route('admin.users.store') }}"
     Route::post('/users/store', [UserAdminController::class, 'store'])->name('users.store');
     Route::get('/users/edit/{id}', [UserAdminController::class, 'edit'])->name('users.edit');
@@ -90,9 +85,6 @@ Route::group([
     Route::get('/users/delete/{id}', [UserAdminController::class, 'destroy'])->name('users.delete');
     Route::post('/admin/users/{id}/unblock', [UserAdminController::class, 'unblockUser'])->name('admin.users.unblock');
     Route::get('/admin/users', [UserAdminController::class, 'index'])->name('users');
-
-    // ==============================================================
-
 
     // 3. CONTENT & POSTINGAN (Name: admin.content)
     Route::get('/content', [PostAdminController::class, 'contentIndex'])->name('content');

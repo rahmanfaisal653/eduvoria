@@ -13,7 +13,6 @@ class UserReportController extends Controller
 
         if (Auth::check()) {
             $pelapor = Auth::user()->name; // Ambil nama user
-            // Atau gunakan username: Auth::user()->username;
         } else {
             $pelapor = 'Guest (Pengunjung)'; // Default jika tidak login
         }
