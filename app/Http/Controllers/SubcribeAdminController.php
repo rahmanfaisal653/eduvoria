@@ -12,13 +12,11 @@ class SubcribeAdminController extends Controller
     {
         $subscribe = Subscribe::all();
 
-        // Revenue bulan ini (HANYA yang PAID)
         $currentMonthRevenue = Subscribe::where('status', 'paid')
             ->whereMonth('start_date', now()->month)
             ->whereYear('start_date', now()->year)
             ->sum('price');
 
-        // Revenue bulan lalu
         $lastMonthRevenue = Subscribe::where('status', 'paid')
             ->whereMonth('start_date', now()->subMonth()->month)
             ->whereYear('start_date', now()->subMonth()->year)

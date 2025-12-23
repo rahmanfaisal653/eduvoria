@@ -46,10 +46,7 @@
                     <label for="add-status" class="block text-sm font-semibold text-gray-800 mb-1">Status Awal</label>
                     <select name="status" id="add-status" required
                         class="w-full rounded-lg border border-gray-300 p-2 text-sm focus:border-teal-500 focus:ring-teal-500">
-                        <option value="active">Active (Tayang)</option>
-                        <option value="inactive">Inactive (Disembunyikan)</option>
-                        <option value="archived">Archived (Diarsipkan)</option>
-                        <option value="reported">Reported (Dilaporkan)</option>
+                        <option value="active">Active</option>
                     </select>
                 </div>
 
