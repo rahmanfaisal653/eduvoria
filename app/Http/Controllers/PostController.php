@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Schema;
 
 class PostController extends Controller
 {
@@ -107,23 +106,10 @@ class PostController extends Controller
             ->withCount('replies')
             ->findOrFail($id);
 
-        
-        $skipViewCount = session()->has('skip_view_count_' . $id);
-        
-        if (
-            Auth::check() &&
-            Auth::id() !== $post->user_id &&
-            !$skipViewCount &&
-            Schema::hasTable('posts') &&
-            Schema::hasColumn('posts', 'views')
-        ) {
+        // Increment view count jika user login dan bukan pemilik post
+        if (Auth::check() && Auth::id() !== $post->user_id) {
             $post->increment('views');
-            // Refresh nilai views setelah increment
-            $post->refresh();
         }
-        
-        // Hapus flag skip view count setelah dicek
-        session()->forget('skip_view_count_' . $id);
 
         // Jika request dari API (Accept: application/json), return JSON
         if ($request->wantsJson() || $request->is('api/*')) {

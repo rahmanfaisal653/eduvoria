@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Like;
 use App\Models\Post;
-use App\Models\Notification; // ✅ TAMBAHAN
+use App\Models\Notification; 
 use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
@@ -42,9 +42,8 @@ class LikeController extends Controller
 
             $post->increment('likes_count');
 
-            // =========================
+
             // ✅ NOTIFIKASI (TAMBAHAN)
-            // =========================
             // ❗ tidak buat notif kalau like postingan sendiri
             if ($post->user_id != Auth::id()) {
 

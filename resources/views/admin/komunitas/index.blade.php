@@ -34,11 +34,6 @@
       <p class="text-[11px] text-slate-500 mt-1">Akumulasi anggota di semua komunitas</p>
     </div>
 
-    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 px-6 py-4">
-      <p class="text-xs font-semibold text-slate-500 mb-1">Perlu Review Cepat</p>
-      <p class="text-2xl font-extrabold text-slate-900">{{ $needReview }}</p>
-      <p class="text-[11px] text-slate-500 mt-1">Laporan komunitas (placeholder)</p>
-    </div>
   </div>
 
 

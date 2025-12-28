@@ -60,8 +60,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bookmark', [bookmarkController::class, 'index'])->name('bookmark');
     Route::post('/bookmark/toggle/{postId}', [bookmarkController::class, 'toggle'])->name('bookmark.toggle');
 
+
     Route::post('/like/toggle/{postId}', [App\Http\Controllers\LikeController::class, 'toggle'])->name('like.toggle');
 
+    
     Route::post('/posts/{postId}/reply', [App\Http\Controllers\ReplyController::class, 'store'])->name('replies.store');
     Route::delete('/replies/{id}', [App\Http\Controllers\ReplyController::class, 'destroy'])->name('replies.destroy');
 });
